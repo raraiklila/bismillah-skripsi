@@ -42,7 +42,7 @@ fun NavigationHost(
 ) {
 
     val isUserLoggedIn = authenticationPreferences.getAccessToken().isNullOrBlank().not()
-    val startDestination = if (isUserLoggedIn) NavBarRoute.Home else OnboardingRoute
+    val startDestination = OnboardingRoute
     val WORKOUT_DETAILS_DEEPLINK = "https://cairo-evolve.vercel.app/workouts"
 
     val navController = rememberNavController()
@@ -82,8 +82,12 @@ fun NavigationHost(
         composable<OnboardingRoute> {
             OnboardingScreen(
                 navigateToLogin = {
-                    navController.navigate(LoginRoute)
-                    navController.saveInSavedState(value = true, key = "showBackButton")
+                    authenticationPreferences.saveTokens("mock-access-token-12345", "mock-refresh-token-12345")
+                    navController.navigate(NavBarRoute.Home) {
+                        popUpTo(OnboardingRoute) {
+                            inclusive = true
+                        }
+                    }
                 },
                 navigateToRegister = { navController.navigate(RegisterRoute) },
             )

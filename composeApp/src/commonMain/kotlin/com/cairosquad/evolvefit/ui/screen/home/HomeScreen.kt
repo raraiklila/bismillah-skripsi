@@ -11,6 +11,8 @@ import com.cairosquad.evolvefit.viewmodel.home.HomeScreenEffect
 import com.cairosquad.evolvefit.viewmodel.home.HomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
+import androidx.compose.runtime.LaunchedEffect
+
 @Composable
 fun HomeScreen(
     navigateToWorkout: (id: String, onNavigateBack: (() -> Unit)?) -> Unit,
@@ -18,6 +20,10 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by homeViewModel.screenState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        homeViewModel.refreshData()
+    }
 
     HandleHomeEffects(
         homeViewModel = homeViewModel,

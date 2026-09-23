@@ -11,6 +11,9 @@ val sharedModule = module {
         repositoryModule,
         useCaseModule,
         localModule,
-        remoteModule
+        // Gunakan mockRemoteModule untuk mode offline (tanpa backend)
+        // Ganti ke remoteModule jika backend sudah aktif kembali
+        mockRemoteModule
+        // remoteModule
     )
-}
+}

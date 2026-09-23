@@ -16,8 +16,27 @@ fun reportDtoToReport(
         waterTakenInLiter = nutritionReport.waterConsumed.toFloat(),
         timeSpentInSeconds = workoutReport.totalTimeSpentSeconds,
         totalWorkouts = workoutReport.totalWorkouts,
-        focusedAreas = workoutReport.topFocusAreas.map { FocusArea.valueOf(it.area) to it.percentage },
-        timeSpentPerWeek = workoutReport.totalTimeSpentByDay.map { WeekDay.valueOf(it.day) to it.timeInSeconds },
-        workoutsPerWeek = workoutReport.workoutsByDay.map { WeekDay.valueOf(it.day) to it.workoutsCount }
+        focusedAreas = workoutReport.topFocusAreas.mapNotNull { it.area.toFocusAreaOrNull()?.to(it.percentage) },
+        timeSpentPerWeek = workoutReport.totalTimeSpentByDay.mapNotNull { dto ->
+            safeWeekDay(dto.day)?.to(dto.timeInSeconds)
+        },
+        workoutsPerWeek = workoutReport.workoutsByDay.mapNotNull { dto ->
+            safeWeekDay(dto.day)?.to(dto.workoutsCount)
+        }
     )
+}
+
+private fun safeWeekDay(value: String): WeekDay? =
+    runCatching { WeekDay.valueOf(value.uppercase()) }.getOrNull()
+
+private fun String.toFocusAreaOrNull(): FocusArea? {
+    return when (this.uppercase()) {
+        "CHEST" -> FocusArea.CHEST
+        "BACK", "LOWER_BACK" -> FocusArea.BACK
+        "LEGS", "GLUTES", "QUADS", "CALVES", "INNER_THIGHS", "HAMSTRINGS" -> FocusArea.LEGS
+        "SHOULDERS" -> FocusArea.SHOULDERS
+        "ARMS", "TRICEPS", "BICEPS" -> FocusArea.ARMS
+        "CORE", "ABS", "LOWER_ABS", "OBLIQUES" -> FocusArea.CORE
+        else -> runCatching { FocusArea.valueOf(this.uppercase()) }.getOrNull()
+    }
 }

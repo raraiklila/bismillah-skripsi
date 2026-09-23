@@ -1,0 +1,109 @@
+﻿Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
+Reusing configuration cache.
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:preBuild UP-TO-DATE
+> Task :composeApp:preDebugBuild UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain UP-TO-DATE
+> Task :composeApp:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :composeApp:generateDebugResValues UP-TO-DATE
+> Task :composeApp:extractDeepLinksDebug UP-TO-DATE
+> Task :composeApp:generateDebugResources UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateActualResourceCollectorsForAndroidMain UP-TO-DATE
+> Task :composeApp:packageDebugResources UP-TO-DATE
+> Task :composeApp:parseDebugLocalResources UP-TO-DATE
+> Task :composeApp:mapDebugSourceSetPaths UP-TO-DATE
+> Task :composeApp:mergeDebugResources UP-TO-DATE
+> Task :composeApp:checkDebugAarMetadata UP-TO-DATE
+> Task :composeApp:processDebugMainManifest UP-TO-DATE
+> Task :composeApp:processDebugManifest UP-TO-DATE
+> Task :composeApp:processDebugManifestForPackage UP-TO-DATE
+> Task :composeApp:processDebugResources UP-TO-DATE
+> Task :composeApp:kspDebugKotlinAndroid UP-TO-DATE
+> Task :composeApp:copyRoomSchemas NO-SOURCE
+> Task :composeApp:compileDebugKotlinAndroid
+./gradlew : e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repo
+sitory/report/remote/mapper.kt:14:31 Argument type mismatch: actual type is 'Int', but 'Int' was expected.
+At line:1 char:1
++ ./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | Out-File -File ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (e: file:///C:/U...' was expected.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:15:28 Argument type mismatch: actual type is 'Int', but 'Int' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:16:29 Argument type mismatch: actual type is 'Float', but 'Float' was expected.
+
+> Task :composeApp:compileDebugKotlinAndroid FAILED
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:17:30 Argument type mismatch: actual type is 'Long', but 'Long' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:18:25 Argument type mismatch: actual type is 'Int', but 'Int' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:19:24 Argument type mismatch: actual type is 'List<Pair<FocusArea, Double>>', but 
+'List<Pair<FocusArea, Double>>' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:28 Argument type mismatch: actual type is 'List<uninferred R (of fun <T, R : Any> 
+Iterable<T>.mapNotNull)>', but 'List<Pair<WeekDay, Long>>' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:62 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:73 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:83 Unresolved reference 'runCatching'.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:97 Unresolved reference 'valueOf'.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:128 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:20:128 Unresolved reference. None of the following candidates is applicable because of a receiver 
+type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:27 Argument type mismatch: actual type is 'List<uninferred R (of fun <T, R : Any> 
+Iterable<T>.mapNotNull)>', but 'List<Pair<WeekDay, Int>>' was expected.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:55 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:66 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:76 Unresolved reference 'runCatching'.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:90 Unresolved reference 'valueOf'.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:121 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/repor
+t/remote/mapper.kt:21:121 Unresolved reference. None of the following candidates is applicable because of a receiver 
+type mismatch:
+fun <A, B> A.to(that: B): Pair<A, B>
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':composeApp:compileDebugKotlinAndroid'.
+> A failure occurred while executing 
+org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 56s
+22 actionable tasks: 1 executed, 21 up-to-date
+Configuration cache entry reused.

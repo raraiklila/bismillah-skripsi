@@ -10,8 +10,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization") version libs.versions.kotlin
-    alias(libs.plugins.googleFirebaseAppdistribution)
-    alias(libs.plugins.googleGmsGoogleServices)
+    // alias(libs.plugins.googleFirebaseAppdistribution)
+    // alias(libs.plugins.googleGmsGoogleServices)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
 }

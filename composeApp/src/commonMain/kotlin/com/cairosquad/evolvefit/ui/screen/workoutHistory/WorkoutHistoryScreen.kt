@@ -51,6 +51,10 @@ fun WorkoutHistoryScreen(
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.loadWorkoutHistory()
+    }
+
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             WorkoutHistoryEffect.NavigateBack -> {

@@ -38,7 +38,7 @@ fun ExerciseCard(
                 .size(width = 88.dp, height = 68.dp)
                 .clip(RoundedCornerShape(8.dp)),
             model = model,
-            contentDescription = stringResource(Res.string.exercise_image),
+            contentDescription = title.ifBlank { stringResource(Res.string.exercise_image) },
         )
         Column(
             modifier = Modifier.weight(1f)

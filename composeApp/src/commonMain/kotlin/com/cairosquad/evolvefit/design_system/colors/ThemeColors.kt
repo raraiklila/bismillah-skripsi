@@ -7,14 +7,22 @@ data class ThemeColors(
     val surfaces: Surfaces,
     val system: System,
     val gradiant: Gradiant,
-    val isDark: Boolean
+    val isDark: Boolean,
 )
+
+data class Brand(
+    val primary: Color,
+    val onPrimary: Color,
+    val primaryContainer: Color,
+    val onPrimaryContainer: Color,
+)
+
 data class Surfaces(
     val surface: Color,
     val onSurface: Color,
     val surfaceContainer: Color,
     val onSurfaceContainer: Color,
-    val textColor : Color,
+    val textColor: Color,
     val surfaceVariant: Color,
     val onSurfaceVariant: Color,
     val outline: Color,
@@ -23,14 +31,9 @@ data class Surfaces(
     val onSurfaceAt2: Color,
     val onSurfaceAt3: Color,
     val onSurfaceAt4: Color,
-    val dropShadow: Color
+    val dropShadow: Color,
 )
-data class Brand(
-    val primary: Color,
-    val onPrimary: Color,
-    val primaryContainer: Color,
-    val onPrimaryContainer: Color,
-)
+
 data class System(
     val warning: Color,
     val error: Color,
@@ -40,8 +43,7 @@ data class System(
 
 data class Gradiant(
     val barGradiant: List<Color>,
-    val iconGradiant:List<Color>,
+    val iconGradiant: List<Color>,
     val shimmerGradientColors: List<Color>,
     val loadingGradientColors: List<Color>,
-
 )

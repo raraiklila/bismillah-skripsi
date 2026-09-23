@@ -2,6 +2,8 @@ package com.cairosquad.evolvefit.ui.screen.report
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 
@@ -24,6 +26,12 @@ fun ReportScreen(
     viewModel: ReportViewModel = koinViewModel()
 ) {
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+
+    // Refresh workout history & activity report setiap kali user kembali ke tab Reports
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.loadWorkoutHistory()
+        viewModel.loadWorkoutReport()
+    }
 
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
@@ -67,3 +75,4 @@ private fun ReportScreenPreview() {
         )
     }
 }
+

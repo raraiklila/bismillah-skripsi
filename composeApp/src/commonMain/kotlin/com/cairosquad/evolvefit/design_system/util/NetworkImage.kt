@@ -1,5 +1,6 @@
 package com.cairosquad.evolvefit.design_system.util
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,11 +20,33 @@ import coil3.compose.AsyncImage
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import evolvefit.composeapp.generated.resources.Res
+import evolvefit.composeapp.generated.resources.chest_press
 import evolvefit.composeapp.generated.resources.ic_default_image
+import evolvefit.composeapp.generated.resources.lat_pulldown
+import evolvefit.composeapp.generated.resources.leg_curl
+import evolvefit.composeapp.generated.resources.leg_press
 import evolvefit.composeapp.generated.resources.placeholder_image
+import evolvefit.composeapp.generated.resources.plank
+import evolvefit.composeapp.generated.resources.seated_cable_row
+import evolvefit.composeapp.generated.resources.shoulder_press
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+@Composable
+private fun getLocalExercisePainter(model: String, contentDescription: String?): Painter? {
+    val key = (model + " " + (contentDescription ?: "")).lowercase().trim()
+    return when {
+        key.contains("leg_press") || key.contains("leg press") -> painterResource(Res.drawable.leg_press)
+        key.contains("leg_curl") || key.contains("leg curl") -> painterResource(Res.drawable.leg_curl)
+        key.contains("lat_pulldown") || key.contains("lat pulldown") -> painterResource(Res.drawable.lat_pulldown)
+        key.contains("seated_cable_row") || key.contains("seated cable row") || key.contains("cable row") -> painterResource(Res.drawable.seated_cable_row)
+        key.contains("chest_press") || key.contains("chest press") -> painterResource(Res.drawable.chest_press)
+        key.contains("shoulder_press") || key.contains("shoulder press") -> painterResource(Res.drawable.shoulder_press)
+        key.contains("plank") -> painterResource(Res.drawable.plank)
+        else -> null
+    }
+}
 
 @Composable
 fun NetworkImage(
@@ -36,9 +59,17 @@ fun NetworkImage(
     placeholderImageSize: DpSize? = null,
     defaultSize: Dp=100.dp
 ) {
-    if (model.isNotBlank()) {
+    val localPainter = getLocalExercisePainter(model, contentDescription)
+    if (localPainter != null) {
+        Image(
+            painter = localPainter,
+            contentDescription = contentDescription,
+            modifier = modifier,
+            contentScale = contentScale
+        )
+    } else if (model.isNotBlank()) {
         AsyncImage(
-            modifier = modifier.size(defaultSize),
+            modifier = modifier,
             contentScale = contentScale,
             model = model,
             contentDescription = contentDescription,

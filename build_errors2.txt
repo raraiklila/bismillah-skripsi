@@ -1,0 +1,50 @@
+﻿Starting a Gradle Daemon, 3 incompatible and 7 stopped Daemons could not be reused, use --status for details
+Reusing configuration cache.
+> Task :composeApp:preBuild UP-TO-DATE
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:preDebugBuild UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidDebug NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateDebugResValues UP-TO-DATE
+> Task :composeApp:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :composeApp:generateDebugResources UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateActualResourceCollectorsForAndroidMain UP-TO-DATE
+> Task :composeApp:packageDebugResources UP-TO-DATE
+> Task :composeApp:parseDebugLocalResources UP-TO-DATE
+> Task :composeApp:extractDeepLinksDebug UP-TO-DATE
+> Task :composeApp:checkDebugAarMetadata UP-TO-DATE
+> Task :composeApp:mapDebugSourceSetPaths UP-TO-DATE
+> Task :composeApp:mergeDebugResources UP-TO-DATE
+> Task :composeApp:processDebugMainManifest UP-TO-DATE
+> Task :composeApp:processDebugManifest UP-TO-DATE
+> Task :composeApp:processDebugManifestForPackage UP-TO-DATE
+> Task :composeApp:processDebugResources UP-TO-DATE
+> Task :composeApp:kspDebugKotlinAndroid
+> Task :composeApp:copyRoomSchemas NO-SOURCE
+> Task :composeApp:compileDebugKotlinAndroid
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/build/generated/ksp/android/androidDebug/kotlin/com/cairosquad/evolvefit/repository/workout/local/AppDatabaseConstructor.kt:5:8 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/androidMain/kotlin/com/cairosquad/evolvefit/design_system/theme/AppTheme.android.kt:35:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/androidMain/kotlin/com/cairosquad/evolvefit/ui/util/PdfReportManager.kt:24:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/androidMain/kotlin/com/cairosquad/evolvefit/ui/util/PdfReportManager.kt:130:41 'fun String.capitalize(locale: Locale): String' is deprecated. Use replaceFirstChar instead.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/androidMain/kotlin/com/cairosquad/evolvefit/ui/util/PdfReportManager.kt:152:49 'fun String.capitalize(locale: Locale): String' is deprecated. Use replaceFirstChar instead.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/repository/workout/remote/WorkoutRemoteDataSourceImpl.kt:119:9 The corresponding parameter in the supertype 'WorkoutRemoteDataSource' is named 'exerciseId'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/ui/screen/createExercise/content/component/RowWithIcon.kt:62:26 'fun EnterTransition.with(exit: ExitTransition): ContentTransform' is deprecated. Infix fun EnterTransition.with(ExitTransition) has been renamed to togetherWith.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/ui/util/PdfReportManager.kt:5:1 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta. Consider using the '-Xexpect-actual-classes' flag to suppress this warning. Also see: https://youtrack.jetbrains.com/issue/KT-61573
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/viewmodel/edit_profile/EditProfileViewModel.kt:89:39 The corresponding parameter in the supertype 'EditProfileInteractionListener' is named 'workoutsDays'. This may cause problems when calling this function with named arguments.
+w: file:///C:/Users/ASUS/Downloads/EvolveFit/composeApp/src/commonMain/kotlin/com/cairosquad/evolvefit/viewmodel/utils/RelativeDateUtils.kt:43:13 'when' is exhaustive so 'else' is redundant here.
+
+BUILD SUCCESSFUL in 2m 19s
+22 actionable tasks: 2 executed, 20 up-to-date
+Configuration cache entry reused.

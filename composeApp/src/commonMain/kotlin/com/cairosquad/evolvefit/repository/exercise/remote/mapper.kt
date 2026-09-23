@@ -23,6 +23,18 @@ fun Exercise.toDto(): ExerciseDto {
     )
 }
 
+private fun String.toFocusAreaOrNull(): FocusArea? {
+    return when (this.uppercase()) {
+        "CHEST" -> FocusArea.CHEST
+        "BACK", "LOWER_BACK" -> FocusArea.BACK
+        "LEGS", "GLUTES", "QUADS", "CALVES", "INNER_THIGHS", "HAMSTRINGS" -> FocusArea.LEGS
+        "SHOULDERS" -> FocusArea.SHOULDERS
+        "ARMS", "TRICEPS", "BICEPS" -> FocusArea.ARMS
+        "CORE", "ABS", "LOWER_ABS", "OBLIQUES" -> FocusArea.CORE
+        else -> runCatching { FocusArea.valueOf(this.uppercase()) }.getOrNull()
+    }
+}
+
 fun ExerciseDto.toDomain(
 ): Exercise {
     val spec = when (exerciseType) {
@@ -34,7 +46,7 @@ fun ExerciseDto.toDomain(
     val equipment = gymEquipments.firstOrNull()?.let { Equipment(it, name) }
         ?: Equipment(0, "Unknown")
 
-    val focusAreas = focusArea.map { FocusArea.valueOf(it.uppercase()) }.toSet()
+    val focusAreas = focusArea.mapNotNull { it.toFocusAreaOrNull() }.toSet()
     return Exercise(
         id = "",
         name = name,
@@ -58,7 +70,7 @@ fun ExerciseResponseDto.toDomain(): Exercise {
     val equipment = gymEquipments.firstOrNull()?.let { Equipment(it.id, it.name) }
         ?: Equipment(0, "Unknown")
 
-    val focusAreas = focusArea.map { FocusArea.valueOf(it.uppercase()) }.toSet()
+    val focusAreas = focusArea.mapNotNull { it.toFocusAreaOrNull() }.toSet()
 
     return Exercise(
         id = id,

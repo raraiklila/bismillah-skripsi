@@ -36,6 +36,10 @@ class HomeViewModel(
         loadAllData()
     }
 
+    fun refreshData() {
+        loadNutrition()
+    }
+
     private fun loadAllData() {
         startLoading()
         loadUserInfo()

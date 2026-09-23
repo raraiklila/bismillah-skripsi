@@ -1,55 +1,49 @@
 package com.cairosquad.evolvefit.design_system.colors
 
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.ui.graphics.Color
 
-val darkThemeColors = ThemeColors(
-    brand = Brand(
-        primary = Color(0xFF86D01D),
-        onPrimary = Color(0xFF181B14),
-        primaryContainer = Color(0xFF151814),
-        onPrimaryContainer = Color(0xFFBDDF8C),
-    ),
-    surfaces = Surfaces(
-        surface = Color(0xFF090A09),
-        onSurface = Color(0xFFF0F5FF),
-        surfaceContainer = Color(0xFF1C1C1C),
-        onSurfaceContainer = Color(0xFFFDFDFD),
-        surfaceVariant = Color(0xFF373737),
-        onSurfaceVariant = Color(0xFF828282),
-        outline = Color(0xFF9C9C9C),
-        outlineVariant = Color(0xFF313131),
-        textColor = Color(0xFFFFFFFF),
-        onSurfaceAt1 = Color(0xDE000000),
-        onSurfaceAt2 = Color(0xAD0B0B0B),
-        onSurfaceAt3 = Color(0x61000000),
-        onSurfaceAt4 = Color(0x1F000000),
-        dropShadow = Color(0x29FFFFFF)
-    ),
-    system = System(
-        warning = Color(0xFFF5D02D),
-        error = Color(0xFFE65858),
-        success = Color(0xFF2DAD58),
-        info = Color(0xFF2B60D3),
-    ),
-    gradiant = Gradiant(
-        barGradiant = listOf(
-            Color(0xFF86D01D),
-            Color(0x03000000),
-        ),
-        shimmerGradientColors = listOf(
-            Color.Transparent,
-            Color(0xFF1A1A1A),
-            Color.Transparent,
-        ),
-        iconGradiant =listOf(
-            Color(0xFF86D01D),
-            Color(0xFFCAE99F)
-        ),
-        loadingGradientColors = listOf(
-            Color.Transparent,
-            Color(0xFF1C1C1C),
-            Color.Transparent,
-        )
-    ),
-    isDark = true
+val darkM3ColorScheme = darkColorScheme(
+    primary = Color(0xFF86D01D),
+    onPrimary = Color(0xFF181B14),
+    primaryContainer = Color(0xFF151814),
+    onPrimaryContainer = Color(0xFFBDDF8C),
+    secondary = Color(0xFFBFCBAB),
+    onSecondary = Color(0xFF2A331C),
+    secondaryContainer = Color(0xFF404A31),
+    onSecondaryContainer = Color(0xFFDBE7C3),
+    tertiary = Color(0xFFA2CFBD),
+    onTertiary = Color(0xFF07372A),
+    tertiaryContainer = Color(0xFF1F4E3F),
+    onTertiaryContainer = Color(0xFFBEEBD9),
+    error = Color(0xFFE65858),
+    onError = Color(0xFF690005),
+    errorContainer = Color(0xFF93000A),
+    onErrorContainer = Color(0xFFFFDAD6),
+    background = Color(0xFF090A09),
+    onBackground = Color(0xFFF0F5FF),
+    surface = Color(0xFF090A09),
+    onSurface = Color(0xFFF0F5FF),
+    surfaceVariant = Color(0xFF373737),
+    onSurfaceVariant = Color(0xFF828282),
+    outline = Color(0xFF9C9C9C),
+    outlineVariant = Color(0xFF313131),
+    scrim = Color(0xFF000000),
+    inverseSurface = Color(0xFFF0F5FF),
+    inverseOnSurface = Color(0xFF2C2C2C),
+    inversePrimary = Color(0xFF4D7500),
+    surfaceContainer = Color(0xFF1C1C1C),
+    surfaceDim = Color(0xFF090A09),
+    surfaceBright = Color(0xFF373737),
+    surfaceContainerLowest = Color(0xFF040404),
+    surfaceContainerLow = Color(0xFF141414),
+    surfaceContainerHigh = Color(0xFF262626),
+    surfaceContainerHighest = Color(0xFF313131),
+)
+
+val darkGradient = Gradiant(
+    barGradiant = listOf(Color(0xFF86D01D), Color(0x03000000)),
+    iconGradiant = listOf(Color(0xFF86D01D), Color(0xFFCAE99F)),
+    shimmerGradientColors = listOf(Color.Transparent, Color(0xFF1A1A1A), Color.Transparent),
+    loadingGradientColors = listOf(Color.Transparent, Color(0xFF1C1C1C), Color.Transparent),
 )

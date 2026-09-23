@@ -34,7 +34,7 @@ class WorkoutDetailsViewModel(
             onStart = ::onLoadDataStart,
             block = { manageWorkoutUseCase.getWorkoutById(workoutId) },
             onSuccess = ::handleGetWorkoutSuccess,
-            onError = { updateState { it.copy(isLoading = false) } }
+            onError = { updateState { it.copy(isLoading = false, screenState = WorkoutDetailsScreenState.ScreenState.Error) } }
         )
     }
 

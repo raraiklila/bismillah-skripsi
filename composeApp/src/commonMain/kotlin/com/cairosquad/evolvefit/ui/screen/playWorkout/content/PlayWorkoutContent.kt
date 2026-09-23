@@ -33,7 +33,6 @@ import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutScreenState.St
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutScreenState.Stage.GET_READY
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutScreenState.Stage.PERFORM
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutScreenState.Stage.REST
-import com.cairosquad.evolvefit.viewmodel.workout_details.WorkoutDetailsScreenState.ExerciseType
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.discard_progress_warning
 import evolvefit.composeapp.generated.resources.end_workout_confirm_button
@@ -103,6 +102,8 @@ private fun ExerciseInfoBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusAreasStrings = exercise.focusAreas.map { areaRes -> stringResource(areaRes) }
+
     BottomSheet(
         isVisible = isVisible,
         onDismiss = onDismiss,
@@ -112,18 +113,18 @@ private fun ExerciseInfoBottomSheet(
             name = exercise.name,
             instructions = exercise.instructions,
             images = exercise.imageUrls,
-            specificationString = when (exercise.exerciseSpec) {
-                is ExerciseSpecUiState.Time -> "${exercise.exerciseSpec.timeInSeconds} " +
+            specificationString = when (val spec = exercise.exerciseSpec) {
+                is ExerciseSpecUiState.Time -> "${spec.timeInSeconds ?: 0} " +
                         stringResource(Res.string.seconds)
 
-                is ExerciseSpecUiState.Reps -> "X${exercise.exerciseSpec.reps}"
+                is ExerciseSpecUiState.Reps -> "X${spec.reps ?: 0}"
             },
             specificationIcon = when (exercise.exerciseSpec) {
                 is ExerciseSpecUiState.Time -> painterResource(Res.drawable.ic_time)
                 is ExerciseSpecUiState.Reps -> painterResource(Res.drawable.ic_count)
             },
             equipment = exercise.equipment,
-            focusAreas = exercise.focusAreas.map { areaRes -> stringResource(areaRes) },
+            focusAreas = focusAreasStrings,
             onDismissBottomSheet = onDismiss
         )
     }
