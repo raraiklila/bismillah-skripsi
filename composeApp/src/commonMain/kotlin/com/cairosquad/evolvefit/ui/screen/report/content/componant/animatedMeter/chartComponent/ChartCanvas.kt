@@ -116,35 +116,6 @@ fun ChartCanvas(
             )
         }
 
-        if (markerProgress <= 0f) return@Canvas
-        val maxIndex = data.indices.maxByOrNull { data[it] } ?: -1
-        if (maxIndex !in anchors.indices) return@Canvas
-        val anchorPoint = anchors[maxIndex]
-
-        val lineAlpha = markerProgress
-        val circleRadius = markerRadiusPx * markerProgress
-        val outerCircleRadius = (markerRadiusPx * 1.5f) * markerProgress
-
-        drawLine(
-            color = dashedLineColor.copy(alpha = lineAlpha),
-            start = Offset(anchorPoint.x, inset),
-            end = Offset(anchorPoint.x, canvasHeight - inset),
-            strokeWidth = 1.dp.toPx(),
-            cap = StrokeCap.Round,
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f), 0f)
-        )
-
-        drawCircle(
-            color = markerColor.copy(alpha = lineAlpha),
-            center = anchorPoint,
-            radius = circleRadius
-        )
-
-        drawCircle(
-            color = markerColor.copy(alpha = lineAlpha),
-            center = anchorPoint,
-            radius = outerCircleRadius,
-            style = Stroke(width = strokeWidthPx)
-        )
+        // Marker circle and dashed line removed as requested for before baseline
     }
 }

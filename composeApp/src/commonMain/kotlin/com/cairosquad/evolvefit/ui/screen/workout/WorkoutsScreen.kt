@@ -11,6 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.ui.navigation.NavBarRoute
@@ -36,6 +38,10 @@ fun WorkoutScreen(
     viewModel: WorkoutViewModel = koinViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.reloadWorkouts()
+    }
 
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {

@@ -3,6 +3,7 @@ package com.cairosquad.evolvefit.repository.mock
 import com.cairosquad.evolvefit.domain.model.FocusArea
 import com.cairosquad.evolvefit.repository.equipment.remote.dto.GymEquipmentDto
 import com.cairosquad.evolvefit.repository.exercise.remote.dto.ExerciseResponseDto
+import com.cairosquad.evolvefit.repository.exercise.remote.ExerciseRemoteDataSource
 import com.cairosquad.evolvefit.repository.workout.remote.WorkoutRemoteDataSource
 import com.cairosquad.evolvefit.repository.workout.remote.dto.CreateWorkoutRequest
 import com.cairosquad.evolvefit.repository.workout.remote.dto.FavoritesWorkoutDto
@@ -11,7 +12,9 @@ import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutDetailsDto
 import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutDto
 import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutHistoryDto
 
-class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
+class MockWorkoutRemoteDataSource(
+    private val exerciseRemoteDataSource: ExerciseRemoteDataSource
+) : WorkoutRemoteDataSource {
 
     private val mockWorkouts = mutableListOf(
         WorkoutDto(
@@ -365,22 +368,54 @@ class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
 
     override suspend fun createWorkout(request: CreateWorkoutRequest): WorkoutDetailsDto {
         val newId = "new-workout-${System.currentTimeMillis()}"
+        val allKnown = (exerciseRemoteDataSource.getAllExercises() + presetWorkoutDetails.values.flatMap { it.exercises }).distinctBy { it.id }
+        val resolvedExercises = request.exercises.map { id ->
+            allKnown.find { it.id == id } ?: ExerciseResponseDto(
+                id = id,
+                name = "Exercise",
+                instructions = listOf("Follow workout instructions"),
+                images = listOf("https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"),
+                focusArea = listOf("CHEST"),
+                exerciseType = "REPS",
+                reps = 10
+            )
+        }
+
+        val totalDuration = resolvedExercises.sumOf { ex ->
+            ex.durationSeconds ?: ((ex.reps ?: 10) * 3)
+        }.coerceAtLeast(300)
+
+        val focusAreas = resolvedExercises.flatMap { ex ->
+            ex.focusArea.mapNotNull { areaStr ->
+                when (areaStr.uppercase()) {
+                    "CHEST" -> FocusArea.CHEST
+                    "BACK", "LOWER_BACK" -> FocusArea.BACK
+                    "LEGS", "GLUTES", "QUADS", "CALVES", "INNER_THIGHS", "HAMSTRINGS" -> FocusArea.LEGS
+                    "SHOULDERS" -> FocusArea.SHOULDERS
+                    "ARMS", "TRICEPS", "BICEPS" -> FocusArea.ARMS
+                    "CORE", "ABS", "LOWER_ABS", "OBLIQUES" -> FocusArea.CORE
+                    else -> runCatching { FocusArea.valueOf(areaStr.uppercase()) }.getOrNull()
+                }
+            }
+        }.distinct().ifEmpty { listOf(FocusArea.CHEST, FocusArea.BACK) }
+
         val created = WorkoutDetailsDto(
             id = newId,
             name = request.name,
-            durationSeconds = 1800,
+            durationSeconds = totalDuration,
             imageUrl = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400",
             description = request.description,
-            level = request.level
+            level = request.level,
+            exercises = resolvedExercises
         )
         workoutDetailsMap[newId] = created
         mockWorkouts.add(
             WorkoutDto(
                 id = newId,
                 name = request.name,
-                durationSeconds = 1800,
+                durationSeconds = totalDuration,
                 imageUrl = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400",
-                focusArea = listOf(FocusArea.CHEST, FocusArea.BACK)
+                focusArea = focusAreas
             )
         )
         return created
@@ -458,6 +493,15 @@ class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
         fileName: String,
         exerciseId: String
     ): String {
-        return "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400"
+        val imageUrl = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400"
+        workoutDetailsMap[exerciseId]?.let { details ->
+            workoutDetailsMap[exerciseId] = details.copy(imageUrl = imageUrl)
+        }
+        val workoutIdx = mockWorkouts.indexOfFirst { it.id == exerciseId }
+        if (workoutIdx != -1) {
+            val w = mockWorkouts[workoutIdx]
+            mockWorkouts[workoutIdx] = w.copy(imageUrl = imageUrl)
+        }
+        return imageUrl
     }
 }

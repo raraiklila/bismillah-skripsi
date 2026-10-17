@@ -55,10 +55,14 @@ class WorkoutViewModel(
         }
     }
 
-    override fun onRetryClicked() {
+    fun reloadWorkouts() {
         val selected = screenState.value.selectedFocusArea
         if (selected == FocusAreaUiState.ALL) loadAllWorkouts()
         else loadWorkoutsByFocusArea(selected)
+    }
+
+    override fun onRetryClicked() {
+        reloadWorkouts()
     }
 
     override fun onWorkoutClicked(id: String) {

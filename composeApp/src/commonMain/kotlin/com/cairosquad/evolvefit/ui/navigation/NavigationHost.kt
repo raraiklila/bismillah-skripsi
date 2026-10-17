@@ -7,6 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,6 +56,10 @@ fun NavigationHost(
         if (deepLinkRoute != null && isUserLoggedIn) {
             navController.navigate(deepLinkRoute)
         }
+    }
+
+    var onExerciseCreationSuccessCallback by remember {
+        mutableStateOf<(() -> Unit)?>(null)
     }
 
     NavHost(
@@ -136,8 +144,8 @@ fun NavigationHost(
             CreateWorkoutScreen(
                 navigateBack = navController::popBackStack,
                 navigateToCreateExercise = { onExerciseCreationSuccess ->
+                    onExerciseCreationSuccessCallback = onExerciseCreationSuccess
                     navController.navigate(CreateExerciseRoute)
-                    navController.saveInSavedState(onExerciseCreationSuccess)
                 },
                 navigateToWorkOuts = navController::popBackStack,
                 navigateToAllExercises = {}
@@ -145,13 +153,12 @@ fun NavigationHost(
         }
 
         composable<CreateExerciseRoute> {
-
-            val onExerciseCreationSuccess: (() -> Unit)? = navController.getFromSavedState()
-
             CreateExerciseScreen(
                 navigateBack = navController::popBackStack,
-                onExerciseCreationSuccess =
-                    onExerciseCreationSuccess?.clearSavedStateAfterInvoke(navController)
+                onExerciseCreationSuccess = {
+                    onExerciseCreationSuccessCallback?.invoke()
+                    onExerciseCreationSuccessCallback = null
+                }
             )
         }
         composable<CommunityWorkoutRoute> {

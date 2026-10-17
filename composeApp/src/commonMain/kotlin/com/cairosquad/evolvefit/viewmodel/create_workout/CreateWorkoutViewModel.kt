@@ -61,29 +61,39 @@ class CreateWorkoutViewModel(
         )
     }
 
+    private val baseExerciseIds = setOf("ex-1", "ex-2", "ex-3", "ex-4")
+
     private fun handleExercisesResultSuccess(exercises: List<Exercise>) {
-        val oldExercises = screenState.value.allExercises
-        val newlyAddExercises = screenState.value.newlyAddExercises
+        val currentNewlyAdded = screenState.value.newlyAddExercises
+        val currentSelected = screenState.value.selectedExercises
         val fetchedExercises = exercises.map { it.toUiState() }
 
-        if (fetchedExercises.size == oldExercises.size + newlyAddExercises.size + 1) {
-            val newExercise = fetchedExercises.last()
-            updateState {
-                it.copy(
-                    status = CreateWorkOutScreenState.ScreenStatus.SUCCESS,
-                    newlyAddExercises = it.newlyAddExercises + newExercise,
-                    selectedExercises = it.selectedExercises + newExercise
-                )
-            }
+        val customExercises = fetchedExercises.filter { it.id !in baseExerciseIds }
+        val baseExercises = fetchedExercises.filter { it.id in baseExerciseIds }
+
+        val newlyCreated = customExercises.filter { custom ->
+            currentNewlyAdded.none { it.id == custom.id }
         }
+
+        val updatedNewlyAdded = (currentNewlyAdded + customExercises).distinctBy { it.id }
+        val updatedSelected = (currentSelected + newlyCreated).distinctBy { it.id }
+
+        val query = screenState.value.searchQuery
+        val filtered = if (query.isBlank()) {
+            baseExercises
+        } else {
+            baseExercises.filter { it.name.contains(query, ignoreCase = true) }
+        }
+
         updateState {
             it.copy(
-                status = CreateWorkOutScreenState.ScreenStatus.SUCCESS,
-                allExercises = fetchedExercises
-                    .filterNot { fetchedExercise -> it.newlyAddExercises.contains(fetchedExercise) },
-                filteredExercises = fetchedExercises
-                    .filterNot { fetchedExercise -> it.newlyAddExercises.contains(fetchedExercise) },
-                isAddExercisesEnabled = it.selectedExercises.isNotEmpty()
+                status = if (fetchedExercises.isEmpty()) CreateWorkOutScreenState.ScreenStatus.EMPTY else CreateWorkOutScreenState.ScreenStatus.SUCCESS,
+                newlyAddExercises = updatedNewlyAdded,
+                selectedExercises = updatedSelected,
+                exerciseCount = updatedSelected.size,
+                allExercises = baseExercises,
+                filteredExercises = filtered,
+                isAddExercisesEnabled = updatedSelected.isNotEmpty()
             )
         }
     }

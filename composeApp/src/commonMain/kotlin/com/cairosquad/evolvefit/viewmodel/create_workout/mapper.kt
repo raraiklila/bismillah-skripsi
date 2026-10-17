@@ -14,18 +14,19 @@ fun CreateWorkOutScreenState.toDomainWorkout(exercises: List<CreateWorkOutScreen
         is UiImage.ImageResource -> ""
         is UiImage.ImageFile -> img.platformFile.path
     }
+    val fallbackImg = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400"
     return Workout(
         id = "",
         name = name,
         description = description,
-        imageUrl = listOfNotNull(imageUrl.takeIf { it.isNotBlank() }).toString(),
-        level = level!!.toDomain(),
+        imageUrl = if (imageUrl.isNotBlank()) imageUrl else fallbackImg,
+        level = (level ?: CreateWorkOutScreenState.WorkoutLevel.BEGINNER).toDomain(),
         estimatedTimeInSeconds = exercises.sumOf {
             when (val t = it.type) {
                 is CreateWorkOutScreenState.ExerciseType.Duration -> t.seconds
-                is CreateWorkOutScreenState.ExerciseType.Reps -> t.count
+                is CreateWorkOutScreenState.ExerciseType.Reps -> t.count * 3
             }
-        },
+        }.coerceAtLeast(300),
         exercises = exercises.map { it.toDomain() }
     )
 }

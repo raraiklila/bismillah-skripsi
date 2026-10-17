@@ -175,7 +175,12 @@ class CreateExerciseViewModel(
     }
 
     private suspend fun uploadExerciseImage(image: UiImage?, id: String): String {
-        val imageFileData = image!!.asByteArray()
+        if (image == null) return ""
+        val imageFileData = try {
+            image.asByteArray()
+        } catch (e: Exception) {
+            return ""
+        }
         return manageExerciseUseCase.uploadExerciseImage(
             fileBytes = imageFileData.bytes,
             fileName = imageFileData.fileName,

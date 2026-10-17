@@ -7,7 +7,7 @@ import com.cairosquad.evolvefit.repository.equipment.remote.dto.GymEquipmentDto
 
 class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
 
-    private val mockExercises = listOf(
+    private val mockExercises = mutableListOf(
         ExerciseResponseDto(
             id = "ex-1",
             name = "Push-up",
@@ -64,20 +64,23 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
             focusArea = listOf("ARMS"),
             exerciseType = "REPS",
             reps = 12
-        ),
+        )
     )
 
     override suspend fun createExercise(exercise: ExerciseDto): ExerciseResponseDto {
-        return ExerciseResponseDto(
+        val newExercise = ExerciseResponseDto(
             id = "ex-new-${System.currentTimeMillis()}",
             name = exercise.name,
             instructions = exercise.instructions,
-            images = exercise.images,
+            images = exercise.images.ifEmpty { listOf("https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400") },
+            gymEquipments = exercise.gymEquipments.map { GymEquipmentDto(id = it, name = "") },
             focusArea = exercise.focusArea,
             exerciseType = exercise.exerciseType,
             reps = exercise.reps,
             durationSeconds = exercise.durationSeconds
         )
+        mockExercises.add(0, newExercise)
+        return newExercise
     }
 
     override suspend fun uploadExerciseImage(
@@ -85,7 +88,13 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
         fileName: String,
         exerciseId: String
     ): String {
-        return "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"
+        val imageUrl = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"
+        val index = mockExercises.indexOfFirst { it.id == exerciseId }
+        if (index != -1) {
+            val ex = mockExercises[index]
+            mockExercises[index] = ex.copy(images = listOf(imageUrl))
+        }
+        return imageUrl
     }
 
     override suspend fun getExercisesByQuery(query: String): List<ExerciseResponseDto> {
@@ -95,6 +104,6 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
     }
 
     override suspend fun getAllExercises(): List<ExerciseResponseDto> {
-        return mockExercises
+        return mockExercises.toList()
     }
 }

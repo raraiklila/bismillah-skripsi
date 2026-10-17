@@ -62,7 +62,10 @@ suspend fun Report.toUiState(): ReportScreenState.ReportUiState {
         timeSpentPerWeek = timeSpentPerWeekUi,
         mostTrainedMuscles = ReportScreenState.TrainedMuscle(
             muscle = focusedAreas.map { (focusArea, _) -> getString(focusArea.stringRes()) },
-            percentage = focusedAreas.map { (_, percentage) -> percentage.toFloat() / 100f }
+            percentage = focusedAreas.map { (_, percentage) ->
+                val p = percentage.toFloat()
+                if (p > 1.0f) p / 100f else p
+            }
         ),
     )
 }

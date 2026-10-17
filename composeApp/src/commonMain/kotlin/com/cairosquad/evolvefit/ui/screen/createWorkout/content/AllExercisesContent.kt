@@ -140,7 +140,12 @@ fun AllExercisesContent(
                                             .padding(bottom = 16.dp)
                                     )
                                 }
-                                items(state.newlyAddExercises) { exercise ->
+                                val visibleNewlyAdded = if (state.searchQuery.isBlank()) {
+                                    state.newlyAddExercises
+                                } else {
+                                    state.newlyAddExercises.filter { it.name.contains(state.searchQuery, ignoreCase = true) }
+                                }
+                                items(visibleNewlyAdded) { exercise ->
                                     ExerciseCardWithTick(
                                         title = exercise.name,
                                         time = "",
@@ -158,7 +163,7 @@ fun AllExercisesContent(
                                         ),
                                         modifier = Modifier.padding(
                                             top =
-                                                if (state.newlyAddExercises.isNotEmpty()) 18.dp
+                                                if (visibleNewlyAdded.isNotEmpty()) 18.dp
                                                 else 0.dp,
                                             bottom = 6.dp
                                         )

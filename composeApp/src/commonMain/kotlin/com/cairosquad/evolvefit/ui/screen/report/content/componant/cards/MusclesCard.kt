@@ -42,11 +42,11 @@ fun MusclesCard(
         repeat(musclesName.size) {
             MuscleItem(
                 modifier = Modifier.then(
-                    if (it < musclesName.size) Modifier.padding(bottom = 16.dp)
+                    if (it < musclesName.size - 1) Modifier.padding(bottom = 16.dp)
                     else Modifier
                 ),
                 muscleName = musclesName[it],
-                percentage = trainedMusclesPercentage[it],
+                percentage = trainedMusclesPercentage.getOrElse(it) { 0f },
                 isAnimationStarted = isAnimationStarted
             )
         }
@@ -69,7 +69,7 @@ private fun MuscleItem(
         )
     )
     Row(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -80,10 +80,11 @@ private fun MuscleItem(
                 .background(Theme.color.brand.primary)
         )
         Column(
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = muscleName,
@@ -96,7 +97,7 @@ private fun MuscleItem(
                     color = Theme.color.surfaces.onSurface
                 )
             }
-            Box {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
                         .height(8.dp)
@@ -107,7 +108,7 @@ private fun MuscleItem(
                 Box(
                     modifier = Modifier
                         .height(8.dp)
-                        .fillMaxWidth(animatePercentage)
+                        .fillMaxWidth(animatePercentage.coerceIn(0f, 1f))
                         .clip(CircleShape)
                         .background(Theme.color.brand.primary)
                 )
