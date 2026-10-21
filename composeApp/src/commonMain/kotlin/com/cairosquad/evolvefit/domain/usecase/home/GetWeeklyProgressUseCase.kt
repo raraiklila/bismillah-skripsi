@@ -21,6 +21,10 @@ class GetWeeklyProgressUseCase(
         )
     }
 
+    suspend fun toggleDayProgress(day: Int, isCompleted: Boolean) {
+        homeRepository.toggleDayProgress(day, isCompleted)
+    }
+
     private fun getCurrentDate(): Pair<LocalDate, LocalDate> {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         val dayOfWeek = today.dayOfWeek

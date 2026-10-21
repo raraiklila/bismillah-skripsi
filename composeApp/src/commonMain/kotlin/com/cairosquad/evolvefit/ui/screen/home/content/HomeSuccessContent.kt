@@ -73,6 +73,7 @@ import org.jetbrains.compose.resources.stringResource
 
         HomeProgressBox(
             progress = state.weeklyProgress,
+            onDayClick = listener::onDayProgressClicked,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 32.dp)

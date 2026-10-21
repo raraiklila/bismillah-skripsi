@@ -5,4 +5,5 @@ interface HomeInteractionListener {
     fun onSavedWorkoutClicked(id: String, isSaved: Boolean)
     fun onRetryClicked()
     fun onRefresh()
+    fun onDayProgressClicked(day: Int)
 }

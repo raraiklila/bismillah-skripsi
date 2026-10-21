@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
@@ -159,43 +161,40 @@ fun CustomTick(
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {}
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue =
-            if (isChecked) Theme.color.surfaces.surfaceContainer
-            else Theme.color.surfaces.surfaceContainer.copy(alpha = 0.0f),
-        animationSpec = tween(300)
-    )
-    val boxModifier = modifier
-        .size(24.dp)
-        .clip(CircleShape)
-        .background(
-            color = backgroundColor,
-            shape = CircleShape
-        )
-        .then(
-            if (!isChecked) {
-                Modifier.border(
-                    width = 1.dp,
-                    color = Theme.color.surfaces.outlineVariant,
-                    shape = CircleShape
-                )
-            } else Modifier
-        )
+    // Single transition drives every property so check & uncheck stay in sync
+    // and nothing (e.g. green tint) lingers on the previously selected item.
+    val transition = updateTransition(targetState = isChecked, label = "TickTransition")
+    val progress by transition.animateFloat(
+        transitionSpec = { tween(durationMillis = 220) },
+        label = "TickProgress"
+    ) { checked -> if (checked) 1f else 0f }
+    val borderColor by transition.animateColor(
+        transitionSpec = { tween(durationMillis = 220) },
+        label = "TickBorder"
+    ) { checked ->
+        if (checked) Theme.color.surfaces.outlineVariant.copy(alpha = 0f)
+        else Theme.color.surfaces.outlineVariant
+    }
 
     Box(
-        modifier = boxModifier,
+        modifier = modifier
+            .size(24.dp)
+            .border(width = 1.dp, color = borderColor, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        AnimatedVisibility(
-            visible = isChecked,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
+        if (progress > 0f) {
             Icon(
                 painter = painterResource(Res.drawable.ic_green_check_circle),
                 contentDescription = null,
                 tint = Theme.color.brand.primary,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier
+                    .size(24.dp)
+                    .graphicsLayer {
+                        alpha = progress
+                        val scale = 0.6f + 0.4f * progress
+                        scaleX = scale
+                        scaleY = scale
+                    }
             )
         }
     }

@@ -6,10 +6,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,17 +37,19 @@ import evolvefit.composeapp.generated.resources.ic_crown
 import evolvefit.composeapp.generated.resources.ic_progress
 import evolvefit.composeapp.generated.resources.ic_scale
 import evolvefit.composeapp.generated.resources.ic_thin_check_mark
+import evolvefit.composeapp.generated.resources.kilogram
 import evolvefit.composeapp.generated.resources.the_goal
 import evolvefit.composeapp.generated.resources.this_week
+import evolvefit.composeapp.generated.resources.weight_loss
 import evolvefit.composeapp.generated.resources.your_progress
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun HomeProgressBox(
     progress: HomeScreenState.WeeklyProgressUiState?,
+    onDayClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(visible = progress != null) {
@@ -65,19 +67,19 @@ fun HomeProgressBox(
             ProgressHeaderRow()
 
             WeeklyProgressBar(
-                progressDays = progress?.progressDays ?: emptyMap()
+                progressDays = progress?.progressDays ?: emptyMap(),
+                onDayClick = onDayClick
             )
 
-            progress?.goal?.let {
-                progress.weightUnit?.let { resource ->
-                    StatsRow(
-                        goal = stringResource(it),
-                        currentWeight = progress.currentWeight,
-                        weightUnit = stringResource(resource),
-                        activityPercentage = progress.activityPercentage
-                    )
-                }
-            }
+            val goalRes = progress?.goal ?: Res.string.weight_loss
+            val weightUnitRes = progress?.weightUnit ?: Res.string.kilogram
+
+            StatsRow(
+                goal = stringResource(goalRes),
+                currentWeight = progress?.currentWeight ?: 70.0f,
+                weightUnit = stringResource(weightUnitRes),
+                activityPercentage = progress?.activityPercentage ?: 0u
+            )
         }
     }
 }
@@ -112,33 +114,24 @@ private fun ProgressHeaderRow(
     }
 }
 
-private const val WEEK_DAYS_NUM = 7
-
 @Composable
 private fun WeeklyProgressBar(
     progressDays: Map<Int, Boolean>,
+    onDayClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    FlowRow(
-        modifier = modifier
-            .fillMaxWidth(),
+    val days = (1..7).associateWith { dayIndex -> progressDays[dayIndex] ?: false }
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        maxItemsInEachRow = WEEK_DAYS_NUM
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        progressDays.entries.forEach { entry ->
+        days.entries.forEach { entry ->
             DayBox(
                 day = entry.key,
                 isCompleted = entry.value,
-                modifier = Modifier
-                    .then(
-                        if (entry.key != progressDays.entries.last().key) {
-                            Modifier
-                                .padding(end = 8.dp)
-                        } else {
-                            Modifier
-                        }
-                    )
+                onClick = { onDayClick(entry.key) }
             )
         }
     }
@@ -148,6 +141,7 @@ private fun WeeklyProgressBar(
 private fun DayBox(
     day: Int,
     isCompleted: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = if (isCompleted) {
@@ -158,9 +152,10 @@ private fun DayBox(
 
     Box(
         modifier = modifier
-            .clip(CircleShape)
             .size(36.dp)
-            .background(backgroundColor),
+            .clip(CircleShape)
+            .background(backgroundColor)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         AnimatedContent(
@@ -168,8 +163,8 @@ private fun DayBox(
             transitionSpec = {
                 fadeIn().togetherWith(fadeOut())
             }
-        ) {
-            if (it) {
+        ) { completed ->
+            if (completed) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_thin_check_mark),
                     contentDescription = stringResource(Res.string.completed),
@@ -201,16 +196,12 @@ private fun StatsRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                vertical = 8.dp
-            ),
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         StatsSection(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(0.28f),
+            modifier = Modifier.weight(1.15f),
             iconRes = Res.drawable.ic_crown,
             title = stringResource(Res.string.the_goal),
             value = goal,
@@ -220,13 +211,12 @@ private fun StatsRow(
             color = Theme.color.surfaces.outlineVariant,
             thickness = 1.dp,
             modifier = Modifier
-                .height(40.dp)
+                .height(36.dp)
+                .padding(horizontal = 4.dp)
         )
 
         StatsSection(
-            modifier = Modifier
-                .weight(0.43f)
-                .padding(start = 16.dp),
+            modifier = Modifier.weight(1.15f),
             iconRes = Res.drawable.ic_scale,
             title = stringResource(Res.string.current_weight),
             value = "${currentWeight.toString(1)} $weightUnit",
@@ -236,14 +226,12 @@ private fun StatsRow(
             color = Theme.color.surfaces.outlineVariant,
             thickness = 1.dp,
             modifier = Modifier
-                .height(40.dp)
+                .height(36.dp)
+                .padding(horizontal = 4.dp)
         )
 
         StatsSection(
-            modifier = Modifier
-                .padding(end = 8.dp)
-                .weight(0.28f)
-                .padding(start = 16.dp),
+            modifier = Modifier.weight(0.85f),
             iconRes = Res.drawable.ic_progress,
             title = stringResource(Res.string.activity),
             value = "$activityPercentage %",
@@ -260,7 +248,7 @@ private fun StatsSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -278,7 +266,8 @@ private fun StatsSection(
                 text = title,
                 style = Theme.textStyle.label.smallRegular12,
                 color = Theme.color.surfaces.onSurfaceVariant,
-                maxLines = 2,
+                maxLines = 1,
+                softWrap = false,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -287,9 +276,8 @@ private fun StatsSection(
             text = value,
             style = Theme.textStyle.body.mediumMedium14,
             color = Theme.color.surfaces.onSurfaceContainer,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            maxLines = 2,
+            softWrap = true
         )
     }
 }
-

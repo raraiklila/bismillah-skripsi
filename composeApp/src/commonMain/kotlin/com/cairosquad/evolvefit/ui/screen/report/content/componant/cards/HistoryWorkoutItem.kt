@@ -3,6 +3,8 @@ package com.cairosquad.evolvefit.ui.screen.report.content.componant.cards
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -64,6 +66,7 @@ fun HistoryWorkoutItem(
             }
         }
         Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             WorkoutDetailsItem(
@@ -77,7 +80,7 @@ fun HistoryWorkoutItem(
                 value = duration
             )
             WorkoutDetailsItem(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1.3f),
                 title = stringResource(Res.string.level_label),
                 value = level
             )
@@ -99,12 +102,17 @@ private fun WorkoutDetailsItem(
         Text(
             text = title,
             style = Theme.textStyle.label.smallRegular12,
-            color = Theme.color.surfaces.onSurfaceVariant
+            color = Theme.color.surfaces.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
             text = value,
             style = Theme.textStyle.title.largeBold14,
-            color = Theme.color.surfaces.onSurfaceContainer
+            color = Theme.color.surfaces.onSurfaceContainer,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

@@ -11,14 +11,26 @@ fun createWorkoutDatesMap(
     endDate: LocalDate,
     workoutDates: List<String>
 ): Map<Int, Boolean> {
-    val workoutSet =
-        workoutDates.toSet().map { localDateTimeToLocalDate(parseIsoDateStringToLocalDateTime(it)) }
+    val workoutSet = workoutDates.mapNotNull {
+        try {
+            it.substringBefore("T")
+        } catch (_: Exception) {
+            null
+        }
+    }.toSet()
     val result = mutableMapOf<Int, Boolean>()
 
+    var dayIndex = 1
     var current = startDate
-    while (current <= endDate) {
-        result[current.dayOfMonth] = current.toString() in workoutSet.map { it.toString() }
+    while (current <= endDate && dayIndex <= 7) {
+        result[dayIndex] = current.toString() in workoutSet
         current = current.plus(1, DateTimeUnit.DAY)
+        dayIndex++
+    }
+    for (i in 1..7) {
+        if (!result.containsKey(i)) {
+            result[i] = false
+        }
     }
     return result
 }

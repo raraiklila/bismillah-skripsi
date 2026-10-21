@@ -24,4 +24,10 @@ class HomeRepositoryImpl(
             )
         }
     }
+
+    override suspend fun toggleDayProgress(day: Int, isCompleted: Boolean) {
+        callDataSource {
+            homeRemoteDataSource.toggleDayProgress(day, isCompleted)
+        }
+    }
 }

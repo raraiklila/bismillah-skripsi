@@ -8,6 +8,7 @@ import com.cairosquad.evolvefit.domain.usecase.home.GetPersonalizedWorkoutsUseCa
 import com.cairosquad.evolvefit.domain.usecase.home.GetWeeklyProgressUseCase
 import com.cairosquad.evolvefit.domain.model.NutritionProgress
 import com.cairosquad.evolvefit.domain.model.WeeklyProgress
+import kotlin.math.roundToInt
 import com.cairosquad.evolvefit.domain.usecase.profile.ManageProfileUseCase
 import com.cairosquad.evolvefit.domain.usecase.workout.ManageWorkoutUseCase
 import com.cairosquad.evolvefit.viewmodel.base.BaseViewModel
@@ -38,6 +39,8 @@ class HomeViewModel(
 
     fun refreshData() {
         loadNutrition()
+        loadProgress()
+        loadUserInfo()
     }
 
     private fun loadAllData() {
@@ -263,6 +266,33 @@ class HomeViewModel(
         viewModelScope.launch {
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
+        }
+    }
+
+    override fun onDayProgressClicked(day: Int) {
+        val currentProgress = screenState.value.weeklyProgress ?: return
+        val days = (1..7).associateWith { currentProgress.progressDays[it] ?: false }.toMutableMap()
+        val currentStatus = days[day] ?: false
+        val newStatus = !currentStatus
+        days[day] = newStatus
+
+        val completedCount = days.values.count { it }
+        val newPercentage = ((completedCount.toFloat() / 7f) * 100f).roundToInt().toUInt()
+
+        updateState {
+            it.copy(
+                weeklyProgress = currentProgress.copy(
+                    progressDays = days,
+                    activityPercentage = newPercentage
+                )
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                getWeeklyProgressUseCase.toggleDayProgress(day, newStatus)
+            } catch (_: Exception) {
+            }
         }
     }
 

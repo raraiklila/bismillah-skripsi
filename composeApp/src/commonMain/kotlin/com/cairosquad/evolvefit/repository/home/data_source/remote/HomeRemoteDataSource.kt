@@ -7,4 +7,9 @@ interface HomeRemoteDataSource {
         startDate: String,
         endDate: String,
     ): WeeklyProgressResponse
+
+    suspend fun toggleDayProgress(
+        day: Int,
+        isCompleted: Boolean,
+    ) {}
 }

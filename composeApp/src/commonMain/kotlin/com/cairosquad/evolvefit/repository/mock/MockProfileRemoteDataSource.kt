@@ -15,7 +15,7 @@ class MockProfileRemoteDataSource : ProfileRemoteDataSource {
         measurementType = "METRIC",
         height = 175.0,
         weight = 70.0,
-        goal = "BUILD_MUSCLE",
+        goal = "LOSE_WEIGHT",
         gymEquipments = emptyList(),
         workoutDays = listOf("MONDAY", "WEDNESDAY", "FRIDAY")
     )

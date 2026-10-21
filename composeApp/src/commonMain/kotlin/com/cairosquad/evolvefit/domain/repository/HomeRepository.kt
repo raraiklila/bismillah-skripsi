@@ -8,4 +8,9 @@ interface HomeRepository {
         startDate: LocalDate,
         endDate: LocalDate
     ): WeeklyProgress
+
+    suspend fun toggleDayProgress(
+        day: Int,
+        isCompleted: Boolean
+    )
 }
