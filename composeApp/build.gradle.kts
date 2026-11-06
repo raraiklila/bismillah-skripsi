@@ -112,10 +112,10 @@ android {
         disable += "NullSafeMutableLiveData"
     }
     defaultConfig {
-        applicationId = "com.cairosquad.evolvefit"
+        applicationId = "com.cairosquad.evolvefit.before"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
     }
     val localFile = file("${rootProject.projectDir}/local.properties")
