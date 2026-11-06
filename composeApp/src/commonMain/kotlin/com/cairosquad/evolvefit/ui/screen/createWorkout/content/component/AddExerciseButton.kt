@@ -1,10 +1,12 @@
 package com.cairosquad.evolvefit.ui.screen.createWorkout.content.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
 import com.cairosquad.evolvefit.viewmodel.create_workout.CreateWorkOutInteractionListener
@@ -21,12 +23,15 @@ fun AddExerciseButton(
     listener: CreateWorkOutInteractionListener,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     PrimaryButton(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(bottom = 24.dp)
-            .navigationBarsPadding(),
+            .padding(bottom = 16.dp)
+            .navigationBarsPadding()
+            .imePadding(),
         text = when {
             state.exerciseCount > 1 -> stringResource(
                 Res.string.add_exercises_button_with_count_,
@@ -40,7 +45,10 @@ fun AddExerciseButton(
 
             else -> stringResource(Res.string.add_exercise_button_)
         },
-        onClick = { if (state.isLoading.not()) listener.onAddWorkoutClicked() },
+        onClick = {
+            focusManager.clearFocus()
+            if (state.isLoading.not()) listener.onAddWorkoutClicked()
+        },
         isEnabled = state.exerciseCount > 0
     )
 }

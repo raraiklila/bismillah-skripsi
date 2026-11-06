@@ -6,7 +6,23 @@ xcuserdata
 !src/**/build/
 local.properties
 .idea
+.vscode/
 .DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.env
+.env.*
+~$*
+~*.tmp
+*.tmp
+node_modules/
+*.docx
+*.doc
+*.pptx
+*.xlsx
+build*.txt
+/-server 8.8.8.8
 captures
 .externalNativeBuild
 .cxx

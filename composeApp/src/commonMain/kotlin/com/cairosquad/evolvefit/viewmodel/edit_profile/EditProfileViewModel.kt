@@ -86,9 +86,9 @@ class EditProfileViewModel(
         }
     }
 
-    override fun onWorkoutDaysChanged(workoutDays: Set<EditProfileScreenState.WeekDayUiState>) {
+    override fun onWorkoutDaysChanged(workoutsDays: Set<EditProfileScreenState.WeekDayUiState>) {
         updateState { state ->
-            state.copy(profile = state.profile.copy(workoutDays = workoutDays))
+            state.copy(profile = state.profile.copy(workoutDays = workoutsDays))
         }
     }
 

@@ -25,7 +25,7 @@ fun CreateExerciseState.toDomainExercise(): Exercise {
             )
 
             CreateExerciseState.MeasurementType.REPS -> Exercise.Specification.Reps(
-                measurementInputValue.toInt()
+                measurementInputValue.toIntOrNull() ?: 0
             )
         },
         focusAreas = this.selectedFocusAreas.map { it.toDomain() }.toSet(),

@@ -1,6 +1,7 @@
 package com.cairosquad.evolvefit.design_system.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -20,7 +21,18 @@ import com.cairosquad.evolvefit.design_system.colors.lightM3ColorScheme
 import com.cairosquad.evolvefit.design_system.text_styles.AppTextStyle
 import com.cairosquad.evolvefit.design_system.text_styles.DefaultTextStyle
 import com.cairosquad.evolvefit.design_system.text_styles.TextStyle
+import com.cairosquad.evolvefit.design_system.text_styles.toMaterial3Typography
 
+/**
+ * Core Application Theme implementing Google's Material 3 Expressive Design System.
+ *
+ * Adopts the official Google Material 3 Expressive guidelines across four pillars:
+ * 1. Color: High-Chroma Vibrant M3 Expressive Color Schemes with full container elevation hierarchy.
+ * 2. Shapes: Official M3 Expressive Corner Radius Scale (medium 12dp, large 16dp, largeIncreased 20dp, extraLarge 28dp, extraExtraLarge 32dp).
+ * 3. Typography: 30-token M3 Expressive Typography Scale featuring prioritized Emphasized variants.
+ * 4. Motion: Spring-physics spatial & effects specifications for natural, fluid tactile interactions.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -30,11 +42,16 @@ fun AppTheme(
     val gradient = if (isDarkTheme) darkGradient else lightGradient
 
 
+    val shapes = defaultAppShapes
+    val spacing = defaultAppSpacing
+    val appTextStyle = TextStyle()
+
     MaterialTheme(
         colorScheme = colorScheme,
+        shapes = shapes.toMaterial3Shapes(),
+        typography = appTextStyle.toMaterial3Typography(),
     ) {
         val themeColors = buildThemeColors(isDarkTheme, gradient)
-        val appTextStyle = TextStyle()
 
         UpdateStatusBarIconsForTheme(isDarkTheme)
         UpdateNavBarColorForTheme(isDarkTheme, colorScheme.surface.toArgb())
@@ -42,6 +59,8 @@ fun AppTheme(
         CompositionLocalProvider(
             LocalThemeColor provides themeColors,
             LocalTextStyle provides appTextStyle,
+            LocalAppShapes provides shapes,
+            LocalAppSpacing provides spacing,
             LocalIsDark provides isDarkTheme,
         ) {
             content()
@@ -59,6 +78,14 @@ private fun buildThemeColors(isDark: Boolean, gradient: Gradiant): ThemeColors {
             onPrimary = cs.onPrimary,
             primaryContainer = cs.primaryContainer,
             onPrimaryContainer = cs.onPrimaryContainer,
+            secondary = cs.secondary,
+            onSecondary = cs.onSecondary,
+            secondaryContainer = cs.secondaryContainer,
+            onSecondaryContainer = cs.onSecondaryContainer,
+            tertiary = cs.tertiary,
+            onTertiary = cs.onTertiary,
+            tertiaryContainer = cs.tertiaryContainer,
+            onTertiaryContainer = cs.onTertiaryContainer,
         ),
         surfaces = Surfaces(
             surface = cs.surface,
@@ -75,6 +102,7 @@ private fun buildThemeColors(isDark: Boolean, gradient: Gradiant): ThemeColors {
             onSurfaceAt3 = if (isDark) Color(0x61000000) else Color(0x3D000000),
             onSurfaceAt4 = if (isDark) Color(0x1F000000) else Color(0x66919191),
             dropShadow = if (isDark) Color(0x29FFFFFF) else Color(0x29000000),
+            surfaceContainerHighest = cs.surfaceContainerHighest,
         ),
         system = System(
             warning = if (isDark) Color(0xFFF5D02D) else Color(0xFFD9CB00),
@@ -88,6 +116,8 @@ private fun buildThemeColors(isDark: Boolean, gradient: Gradiant): ThemeColors {
 }
 
 val LocalTextStyle = staticCompositionLocalOf<AppTextStyle> { DefaultTextStyle }
+val LocalAppShapes = staticCompositionLocalOf { defaultAppShapes }
+val LocalAppSpacing = staticCompositionLocalOf { defaultAppSpacing }
 val LocalThemeColor = staticCompositionLocalOf { ThemeColors(
     brand = Brand(Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified),
     surfaces = Surfaces(Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified),

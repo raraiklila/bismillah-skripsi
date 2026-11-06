@@ -1,5 +1,6 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant.cards
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -36,7 +39,7 @@ fun BarChartCard(
     focusedBarColor: Color = Theme.color.brand.primary,
     unfocusedBarColor: Color = Theme.color.surfaces.surfaceVariant,
     focusedLabelColor: Color = Theme.color.surfaces.onSurface,
-    unFocusedLabelColor: Color = Theme.color.surfaces.onSurfaceVariant,
+    unFocusedLabelColor: Color = Theme.color.surfaces.onSurface.copy(alpha = 0.75f),
     gridLinesColor: Color = Theme.color.surfaces.outlineVariant,
     steps: Int = 4
 ) {
@@ -48,13 +51,14 @@ fun BarChartCard(
     ReportCard(
         modifier = modifier,
         title = stringResource(Res.string.workouts_per_week),
-        value = stringResource(Res.string.weekly)
+        value = stringResource(Res.string.weekly),
+        isBadge = false
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
-                    .height(150.dp)
-                    .padding(end = 8.dp, bottom = 8.dp),
+                    .height(144.dp)
+                    .padding(end = 8.dp, bottom = 4.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 for (i in steps downTo 0) {
@@ -77,6 +81,7 @@ fun BarChartCard(
                         )
                     }
                     AnimatedBarChart(
+                        modifier = Modifier.padding(top = 6.dp),
                         data = data,
                         focusedBarColor = focusedBarColor,
                         unfocusedBarColor = unfocusedBarColor,
@@ -88,18 +93,37 @@ fun BarChartCard(
                 }
                 Box(
                     modifier = Modifier
-                        .padding(top = 12.dp)
+                        .padding(top = 8.dp, bottom = 4.dp)
+                        .height(24.dp)
                         .fillMaxWidth()
                 ) {
                     barCenters.forEachIndexed { index, centerX ->
                         val isMax = index == maxIndex
-                        Text(
-                            text = labels[index],
-                            color = if (isMax) focusedLabelColor else unFocusedLabelColor,
-                            style = Theme.textStyle.label.smallRegular12,
-                            modifier = Modifier
-                                .absoluteOffset(x = with(LocalDensity.current) { centerX.toDp() } - 10.dp)
-                        )
+                        if (isMax) {
+                            Box(
+                                modifier = Modifier
+                                    .absoluteOffset(x = with(LocalDensity.current) { centerX.toDp() } - 15.dp)
+                                    .clip(Theme.shapes.pillShape)
+                                    .background(Theme.color.brand.primaryContainer.copy(alpha = 0.5f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = labels[index],
+                                    color = Theme.color.brand.primary,
+                                    style = Theme.textStyle.label.labelSmallEmphasized
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = labels[index],
+                                color = unFocusedLabelColor,
+                                style = Theme.textStyle.label.smallRegular12.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Medium),
+                                modifier = Modifier
+                                    .absoluteOffset(x = with(LocalDensity.current) { centerX.toDp() } - 10.dp)
+                                    .padding(vertical = 2.dp)
+                            )
+                        }
                     }
                 }
             }

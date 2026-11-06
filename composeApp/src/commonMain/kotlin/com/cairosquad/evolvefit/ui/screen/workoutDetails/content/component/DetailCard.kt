@@ -81,13 +81,14 @@ private fun DetailCard(
 ) {
     Column(
         modifier = modifier
-            .clip(shape = RoundedCornerShape(8.dp))
+            .clip(shape = Theme.shapes.cardShape)
             .border(
                 width = 1.dp,
                 color = Theme.color.surfaces.outlineVariant,
-                shape = RoundedCornerShape(8.dp)
+                shape = Theme.shapes.cardShape
             )
-            .background(Theme.color.surfaces.surfaceContainer).padding(16.dp),
+            .background(Theme.color.surfaces.surfaceContainer)
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 

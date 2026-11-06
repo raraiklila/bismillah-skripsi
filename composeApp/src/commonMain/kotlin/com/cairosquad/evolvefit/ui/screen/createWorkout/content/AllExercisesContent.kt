@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.component.ExpressiveSearchBar
 import com.cairosquad.evolvefit.design_system.component.InputField
 import com.cairosquad.evolvefit.design_system.component.StateMessage
 import com.cairosquad.evolvefit.design_system.component.appbar.ActionIconButton
@@ -92,6 +93,17 @@ fun AllExercisesContent(
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
+
+                ExpressiveSearchBar(
+                    query = state.searchQuery,
+                    onQueryChange = listener::onSearchQueryChanged,
+                    placeholder = stringResource(Res.string.search_exercise_placeholder_),
+                    onClearQuery = { listener.onSearchQueryChanged("") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 6.dp)
+                )
             }
             RefreshBox(
                 isRefreshing = state.isRefreshing,
@@ -124,22 +136,12 @@ fun AllExercisesContent(
                                     .fillMaxSize()
                                     .padding(horizontal = 16.dp),
                                 contentPadding = PaddingValues(
+                                    top = 6.dp,
                                     bottom = 12.dp + 24.dp + 48.dp +
                                             WindowInsets.navigationBars
                                                 .asPaddingValues().calculateBottomPadding()
                                 )
                             ) {
-                                item {
-                                    InputField(
-                                        value = state.searchQuery,
-                                        verticalPadding = 14.dp,
-                                        onValueChange = listener::onSearchQueryChanged,
-                                        placeholder = stringResource(Res.string.search_exercise_placeholder_),
-                                        leadingIcon = Res.drawable.ic_search,
-                                        modifier = Modifier
-                                            .padding(bottom = 16.dp)
-                                    )
-                                }
                                 items(state.newlyAddExercises) { exercise ->
                                     ExerciseCardWithTick(
                                         title = exercise.name,

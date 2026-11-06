@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.ui.screen.createWorkout.content.toDisplayName
 import com.cairosquad.evolvefit.viewmodel.create_workout.CreateWorkOutScreenState.WorkoutLevel
@@ -61,16 +63,20 @@ fun CustomDropDownMenu(
     else
         Theme.color.surfaces.onSurfaceContainer
 
-    val rotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
+    val rotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = AppMotion.SpringTokens.fastSpatial(),
+        label = "M3DropdownArrowRotation"
+    )
 
     Column(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .clickable { expanded = !expanded }
+                .clip(Theme.shapes.inputShape)
                 .background(Theme.color.surfaces.surfaceContainer)
-                .padding(horizontal = 12.dp, vertical = 14.dp),
+                .bouncyClickable { expanded = !expanded }
+                .padding(horizontal = 14.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             BasicText(
@@ -96,7 +102,7 @@ fun CustomDropDownMenu(
                 onDismissRequest = { expanded = false },
                 modifier = Modifier
                     .background(Theme.color.surfaces.surfaceContainer)
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(Theme.shapes.cardSmallShape)
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
@@ -180,7 +186,7 @@ private fun DropdownMenuPreview() {
             modifier = Modifier
                 .padding(top = 40.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(Theme.shapes.cardSmallShape)
                 .background(Theme.color.surfaces.surfaceContainer),
             items = items,
             selectedItem = selectedItem,

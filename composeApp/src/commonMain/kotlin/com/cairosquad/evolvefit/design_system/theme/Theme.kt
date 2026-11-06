@@ -17,6 +17,15 @@ object Theme {
     val typography: Typography
         @Composable @ReadOnlyComposable get() = MaterialTheme.typography
 
+    val shapes: AppShapes
+        @Composable @ReadOnlyComposable get() = LocalAppShapes.current
+
+    val spacing: AppSpacing
+        @Composable @ReadOnlyComposable get() = LocalAppSpacing.current
+
+    val motion: AppMotion
+        get() = AppMotion
+
     val isDark: Boolean
         @Composable @ReadOnlyComposable get() = LocalIsDark.current
 }

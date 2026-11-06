@@ -63,27 +63,40 @@ class CreateWorkoutViewModel(
 
     private fun handleExercisesResultSuccess(exercises: List<Exercise>) {
         val oldExercises = screenState.value.allExercises
-        val newlyAddExercises = screenState.value.newlyAddExercises
+        val currentNewlyAdded = screenState.value.newlyAddExercises
         val fetchedExercises = exercises.map { it.toUiState() }
 
-        if (fetchedExercises.size == oldExercises.size + newlyAddExercises.size + 1) {
-            val newExercise = fetchedExercises.last()
-            updateState {
-                it.copy(
-                    status = CreateWorkOutScreenState.ScreenStatus.SUCCESS,
-                    newlyAddExercises = it.newlyAddExercises + newExercise,
-                    selectedExercises = it.selectedExercises + newExercise
-                )
-            }
+        // Cari exercise baru yang belum ada di oldExercises maupun newlyAddExercises sebelumnya
+        val brandNewExercises = if (oldExercises.isNotEmpty() || currentNewlyAdded.isNotEmpty()) {
+            val knownIds = (oldExercises + currentNewlyAdded).map { it.id }.toSet()
+            fetchedExercises.filterNot { it.id in knownIds }
+        } else {
+            emptyList()
         }
+
+        val updatedNewlyAdded = (currentNewlyAdded + brandNewExercises).distinctBy { it.id }
+        val updatedNewlyAddedIds = updatedNewlyAdded.map { it.id }.toSet()
+        val updatedSelected = (screenState.value.selectedExercises + brandNewExercises).distinctBy { it.id }
+
+        // Sisa exercises untuk bagian "All Exercises" (tanpa menduplikasi newlyAddExercises)
+        val remainingExercises = fetchedExercises.filterNot { it.id in updatedNewlyAddedIds }
+
+        val query = screenState.value.searchQuery
+        val filtered = if (query.isBlank()) {
+            remainingExercises
+        } else {
+            remainingExercises.filter { it.name.contains(query, ignoreCase = true) }
+        }
+
         updateState {
             it.copy(
                 status = CreateWorkOutScreenState.ScreenStatus.SUCCESS,
-                allExercises = fetchedExercises
-                    .filterNot { fetchedExercise -> it.newlyAddExercises.contains(fetchedExercise) },
-                filteredExercises = fetchedExercises
-                    .filterNot { fetchedExercise -> it.newlyAddExercises.contains(fetchedExercise) },
-                isAddExercisesEnabled = it.selectedExercises.isNotEmpty()
+                newlyAddExercises = updatedNewlyAdded,
+                selectedExercises = updatedSelected,
+                allExercises = remainingExercises,
+                filteredExercises = filtered,
+                exerciseCount = updatedSelected.size,
+                isAddExercisesEnabled = updatedSelected.isNotEmpty()
             )
         }
     }
@@ -99,7 +112,13 @@ class CreateWorkoutViewModel(
     }
 
     override fun onImageSelected(image: UiImage) {
-        updateState { it.copy(image = image, isImagePickerOpen = false) }
+        updateState {
+            it.copy(
+                image = image,
+                isImagePickerOpen = false,
+                isNextEnabled = validate(it.name, it.level?.name ?: "", it.description, image)
+            )
+        }
     }
 
     override fun onImageClicked() {
@@ -130,7 +149,7 @@ class CreateWorkoutViewModel(
         updateState {
             it.copy(
                 name = cleanName,
-                isNextEnabled = validate(cleanName, it.level?.name ?: "", it.description)
+                isNextEnabled = validate(cleanName, it.level?.name ?: "", it.description, it.image)
             )
         }
     }
@@ -140,7 +159,7 @@ class CreateWorkoutViewModel(
             it.copy(
                 level = goal,
                 isGoalExpanded = false,
-                isNextEnabled = validate(it.name, goal.name, it.description)
+                isNextEnabled = validate(it.name, goal.name, it.description, it.image)
             )
         }
     }
@@ -154,13 +173,13 @@ class CreateWorkoutViewModel(
         updateState {
             it.copy(
                 description = trimmed,
-                isNextEnabled = validate(it.name, it.level?.name ?: "", trimmed)
+                isNextEnabled = validate(it.name, it.level?.name ?: "", trimmed, it.image)
             )
         }
     }
 
-    private fun validate(name: String, goal: String, desc: String): Boolean {
-        return name.isNotBlank() && goal.isNotBlank() && desc.isNotBlank()
+    private fun validate(name: String, goal: String, desc: String, image: UiImage): Boolean {
+        return name.isNotBlank() && goal.isNotBlank() && desc.isNotBlank() && image is UiImage.ImageFile
     }
 
     override fun onExerciseCheckedChanged(exercise: CreateWorkOutScreenState.ExerciseUiState) {

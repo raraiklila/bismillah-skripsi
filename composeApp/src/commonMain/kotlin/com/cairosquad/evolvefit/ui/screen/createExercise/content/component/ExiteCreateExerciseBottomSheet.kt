@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.BottomSheet
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
+import com.cairosquad.evolvefit.design_system.component.SecondaryButton
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import evolvefit.composeapp.generated.resources.Res
@@ -69,11 +70,9 @@ fun ExitCreationBottomSheet(
                 text = stringResource(Res.string.cancel),
                 onClick = onCancelClicked
             )
-            PrimaryButton(
+            SecondaryButton(
                 modifier = Modifier.padding(top = 12.dp),
                 text = stringResource(Res.string.exit_without_saving),
-                enabledContainerColor = Color.Transparent,
-                enabledTextColor = Theme.color.surfaces.onSurfaceContainer,
                 onClick = onExitWithoutSavingClicked
             )
         }

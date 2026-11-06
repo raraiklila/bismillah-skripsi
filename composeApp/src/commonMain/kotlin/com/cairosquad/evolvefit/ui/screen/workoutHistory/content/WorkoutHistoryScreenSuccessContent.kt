@@ -8,8 +8,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.screen.report.content.componant.cards.HistoryWorkoutItem
 import com.cairosquad.evolvefit.viewmodel.workout_history.WorkoutHistoryScreenState
 
@@ -23,8 +25,8 @@ fun LazyListScope.workoutHistoryScreenSuccessContent(state: WorkoutHistoryScreen
                     .background(Theme.color.surfaces.surface)
                     .padding(vertical = 12.dp),
                 text = dayGroup,
-                style = Theme.textStyle.label.smallRegular14,
-                color = Theme.color.surfaces.onSurfaceVariant
+                style = Theme.textStyle.label.labelLargeEmphasized,
+                color = Theme.color.brand.primary
             )
         }
         itemsIndexed(workouts) { index, workout ->
@@ -37,11 +39,13 @@ fun LazyListScope.workoutHistoryScreenSuccessContent(state: WorkoutHistoryScreen
                         else
                             Modifier.padding(bottom = 12.dp)
                     )
+                    .clip(Theme.shapes.cardShape)
                     .background(
                         color = Theme.color.surfaces.surfaceContainer,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = Theme.shapes.cardShape
                     )
-                    .padding(12.dp),
+                    .bouncyClickable(onClick = {})
+                    .padding(16.dp),
                 workoutName = workout.name,
                 workoutDate = workout.date,
                 workoutImage = workout.imageUrl,

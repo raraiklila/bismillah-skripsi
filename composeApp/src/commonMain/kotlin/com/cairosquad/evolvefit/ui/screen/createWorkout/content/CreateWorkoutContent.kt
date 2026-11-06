@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.InputField
@@ -59,17 +63,25 @@ fun CreateWorkoutDetailsContent(
     listener: CreateWorkOutInteractionListener,
 ) {
     val workoutGoals = WorkoutLevel.entries.toTypedArray()
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween,
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Column {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             CustomAppBar(
                 title = "",
                 header = {
@@ -87,6 +99,7 @@ fun CreateWorkoutDetailsContent(
 
             Column(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(bottom = 24.dp)
                     .padding(horizontal = 16.dp)
             ) {
@@ -115,7 +128,7 @@ fun CreateWorkoutDetailsContent(
                 onImageRetrieved = listener::onImageSelected,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .clip(shape = RoundedCornerShape(8.dp))
+                    .clip(shape = Theme.shapes.cardSmallShape)
                     .align(Alignment.CenterHorizontally)
 
             )
@@ -149,54 +162,30 @@ fun CreateWorkoutDetailsContent(
                 listener = listener
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .background(
-                        color = Theme.color.surfaces.surfaceContainer,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .clip(RoundedCornerShape(8.dp))
-            ) {
-                InputField(
-                    value = state.description,
-                    onValueChange = {
-                        if (it.length <= 3000) listener.onDescriptionChanged(it)
-                    },
-                    horizontalPadding = 12.dp,
-                    verticalPadding = 12.dp,
-                    maxCharacters = 3000,
-                    isSingleLine = false,
-                    placeholder = stringResource(Res.string.enter_description_),
-                    modifier = Modifier
-                        .height(124.dp)
-                        .fillMaxWidth()
-                )
-                BasicText(
-                    text = stringResource(
-                        Res.string.characters_left,
-                        3000 - state.description.trim().length
-                    ),
-                    style = Theme.textStyle.label.smallRegular12.copy(
-                        color = Theme.color.surfaces.onSurfaceVariant
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(bottom = 12.dp)
-                        .padding(horizontal = 12.dp)
-                )
-            }
+            InputField(
+                placeholder = stringResource(Res.string.enter_description_),
+                minHeight = 124.dp,
+                value = state.description,
+                onValueChange = listener::onDescriptionChanged,
+                isSingleLine = false,
+                maxCharacters = 3000,
+                isCharacterCountVisible = true,
+                verticalPadding = 12.dp,
+                horizontalPadding = 12.dp,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
 
         PrimaryButton(
             text = stringResource(Res.string.next_button_),
-            onClick = listener::onNextClicked,
+            onClick = {
+                focusManager.clearFocus()
+                listener.onNextClicked()
+            },
             isEnabled = state.isNextEnabled,
             modifier = Modifier
                 .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(horizontal = 16.dp, vertical = 16.dp)
-                .padding(bottom = 24.dp)
         )
     }
 
@@ -236,6 +225,7 @@ fun GoalDropDownMenu(
                 items = state.levelsNames,
                 onItemSelected = listener::onGoalSelected,
                 isChecked = state::isGoalSelected,
+                isSingleChoice = true,
                 labelProvider = { toDisplayName(it) }
             )
         }

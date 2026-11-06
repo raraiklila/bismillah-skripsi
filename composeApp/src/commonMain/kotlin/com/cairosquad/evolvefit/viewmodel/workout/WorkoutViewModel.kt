@@ -55,6 +55,10 @@ class WorkoutViewModel(
         }
     }
 
+    override fun onSearchQueryChanged(query: String) {
+        updateState { it.copy(searchQuery = query) }
+    }
+
     override fun onRetryClicked() {
         val selected = screenState.value.selectedFocusArea
         if (selected == FocusAreaUiState.ALL) loadAllWorkouts()

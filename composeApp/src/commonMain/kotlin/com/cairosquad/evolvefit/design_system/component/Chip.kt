@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -37,20 +38,23 @@ fun Chip(
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) selectedContainerColor else unselectedContainerColor,
-        label = "ContainerColorAnimation"
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring(),
+        label = "M3ChipContainerColor"
     )
 
     val textColor by animateColorAsState(
         targetValue = if (isSelected) selectedTextColor else unselectedTextColor,
-        label = "TextColorAnimation"
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring(),
+        label = "M3ChipTextColor"
     )
     Row(
         modifier = modifier
             .height(40.dp)
-            .clip(CircleShape)
-            .clickable(onClick = onClick, enabled = isEnabled)
-            .background(color = containerColor, shape = CircleShape),
-        horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
+            .clip(Theme.shapes.chipShape)
+            .background(color = containerColor, shape = Theme.shapes.chipShape)
+            .bouncyClickable(onClick = onClick, enabled = isEnabled),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),

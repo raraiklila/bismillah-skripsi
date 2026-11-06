@@ -1,6 +1,5 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant.cards
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -9,11 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.component.ExpressiveLinearProgressIndicator
+import com.cairosquad.evolvefit.design_system.component.ProgressIndicatorStyle
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.most_trained_muscles
@@ -42,7 +41,7 @@ fun MusclesCard(
         repeat(musclesName.size) {
             MuscleItem(
                 modifier = Modifier.then(
-                    if (it < musclesName.size) Modifier.padding(bottom = 16.dp)
+                    if (it < musclesName.size - 1) Modifier.padding(bottom = 16.dp)
                     else Modifier
                 ),
                 muscleName = musclesName[it],
@@ -64,54 +63,52 @@ private fun MuscleItem(
     val animatePercentage by animateFloatAsState(
         targetValue = if (isAnimationStarted) percentage else 0f,
         animationSpec = tween(
-            durationMillis = 1200,
-            easing = LinearOutSlowInEasing
+            durationMillis = 1000,
+            easing = AppMotion.EmphasizedEasing
         )
     )
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(height = 40.dp, width = 4.dp)
-                .clip(RoundedCornerShape(topEnd = 100.dp, bottomEnd = 100.dp))
-                .background(Theme.color.brand.primary)
+                .size(height = 36.dp, width = 4.dp)
+                .clip(Theme.shapes.pillShape)
+                .background(
+                    if (animatePercentage > 0f) Theme.color.brand.primary
+                    else Theme.color.surfaces.outlineVariant
+                )
         )
         Column(
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
-                    modifier = Modifier.weight(1f),
                     text = muscleName,
                     style = Theme.textStyle.label.smallRegular14,
-                    color = Theme.color.surfaces.onSurfaceVariant
+                    color = Theme.color.surfaces.onSurface
                 )
                 Text(
                     text = "${(animatePercentage * 100).toInt()}%",
-                    style = Theme.textStyle.headline.largeBold16,
-                    color = Theme.color.surfaces.onSurface
+                    style = Theme.textStyle.label.labelLargeEmphasized,
+                    color = if (animatePercentage > 0f) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceVariant
                 )
             }
-            Box {
-                Box(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .fillMaxWidth()
-                        .clip(CircleShape)
-                        .background(Theme.color.surfaces.surfaceVariant)
-                )
-                Box(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .fillMaxWidth(animatePercentage)
-                        .clip(CircleShape)
-                        .background(Theme.color.brand.primary)
-                )
-            }
+            ExpressiveLinearProgressIndicator(
+                progress = animatePercentage,
+                style = if (animatePercentage > 0f) ProgressIndicatorStyle.Wavy else ProgressIndicatorStyle.Flat,
+                trackThickness = 8.dp,
+                indicatorColor = Theme.color.brand.primary,
+                trackColor = Theme.color.surfaces.surfaceVariant
+            )
         }
     }
 }

@@ -36,7 +36,7 @@ fun ExerciseCard(
         NetworkImage(
             modifier = Modifier
                 .size(width = 88.dp, height = 68.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(Theme.shapes.medium),
             model = model,
             contentDescription = title.ifBlank { stringResource(Res.string.exercise_image) },
         )

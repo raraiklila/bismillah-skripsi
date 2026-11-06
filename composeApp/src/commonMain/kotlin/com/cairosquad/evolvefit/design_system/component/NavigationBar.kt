@@ -27,11 +27,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.dashboard
 import evolvefit.composeapp.generated.resources.dashboard_filled
@@ -94,26 +97,68 @@ private fun NavigationItem(
         targetValue =
             if (isSelected) Theme.color.brand.primary
             else Theme.color.surfaces.onSurfaceVariant,
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.SpringTokens.fastEffects(),
+        label = "M3NavTextColor"
     )
+
+    val indicatorColor by animateColorAsState(
+        targetValue = if (isSelected) Theme.color.brand.primary.copy(alpha = 0.18f) else Color.Transparent,
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.SpringTokens.fastEffects(),
+        label = "M3NavIndicatorColor"
+    )
+
+    val pillScaleX by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.45f,
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.SpringTokens.fastSpatial(),
+        label = "M3NavPillScaleX"
+    )
+
+    val iconScale by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isSelected) 1.12f else 1.0f,
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.SpringTokens.fastSpatial(),
+        label = "M3NavIconScale"
+    )
+
     Column(
-        modifier = modifier.clickable(onClick = onClick, enabled = isClickEnabled),
+        modifier = modifier.bouncyClickable(onClick = onClick, enabled = isClickEnabled),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AnimatedContent(
-            targetState = icon,
-            transitionSpec = {
-                (fadeIn(tween(450))).togetherWith(fadeOut(tween(450)))
-            }
+        Box(
+            modifier = Modifier
+                .size(width = 56.dp, height = 32.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = icon,
-                contentDescription = navItem.label,
-                modifier = Modifier.size(24.dp),
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = pillScaleX
+                    }
+                    .clip(Theme.shapes.pillShape)
+                    .background(indicatorColor)
             )
+            AnimatedContent(
+                targetState = icon,
+                transitionSpec = {
+                    (fadeIn(tween(220))).togetherWith(fadeOut(tween(150)))
+                },
+                label = "M3NavIconTransition"
+            ) { targetIcon ->
+                Image(
+                    painter = targetIcon,
+                    contentDescription = navItem.label,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .graphicsLayer {
+                            scaleX = iconScale
+                            scaleY = iconScale
+                        },
+                )
+            }
         }
         Text(
             text = navItem.label,
-            style = Theme.textStyle.body.smallRegular10,
+            style = if (isSelected) Theme.textStyle.label.labelSmallEmphasized else Theme.textStyle.body.smallRegular10,
             modifier = Modifier.padding(top = 4.dp),
             color = textColor
         )

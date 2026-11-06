@@ -21,6 +21,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
 
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
+
 @Composable
 fun ChartCanvas(
     data: List<Float>,
@@ -31,8 +33,8 @@ fun ChartCanvas(
     markerRadiusPx: Float,
     maxValue: Float,
     isAnimationStarted: Boolean,
-    animationDuration: Int = 1200,
-    animationEasing: Easing = LinearOutSlowInEasing,
+    animationDuration: Int = 1000,
+    animationEasing: Easing = AppMotion.EmphasizedEasing,
     onAnchorsComputed: (List<Offset>) -> Unit,
     onTap: (Offset) -> Unit
 ) {
@@ -48,7 +50,7 @@ fun ChartCanvas(
         targetValue = if (animationProgress >= 1f) 1f else 0f,
         animationSpec = tween(
             durationMillis = 400,
-            easing = LinearOutSlowInEasing
+            easing = AppMotion.EmphasizedDecelerate
         ),
         label = "markerAnimation"
     )
@@ -124,27 +126,45 @@ fun ChartCanvas(
         val lineAlpha = markerProgress
         val circleRadius = markerRadiusPx * markerProgress
         val outerCircleRadius = (markerRadiusPx * 1.5f) * markerProgress
+        val ambientGlowRadius = (markerRadiusPx * 2.4f) * markerProgress
 
+        // Vertical Guide Dashed Line
         drawLine(
-            color = dashedLineColor.copy(alpha = lineAlpha),
+            color = dashedLineColor.copy(alpha = 0.6f * lineAlpha),
             start = Offset(anchorPoint.x, inset),
             end = Offset(anchorPoint.x, canvasHeight - inset),
             strokeWidth = 1.dp.toPx(),
             cap = StrokeCap.Round,
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f), 0f)
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f, 6f), 0f)
         )
 
+        // 1. Material 3 Expressive Ambient Glow Aura (Soft primary halo)
+        drawCircle(
+            color = markerColor.copy(alpha = 0.20f * lineAlpha),
+            center = anchorPoint,
+            radius = ambientGlowRadius
+        )
+
+        // 2. Expressive Outer Ring
+        drawCircle(
+            color = markerColor.copy(alpha = 0.50f * lineAlpha),
+            center = anchorPoint,
+            radius = outerCircleRadius,
+            style = Stroke(width = strokeWidthPx)
+        )
+
+        // 3. Vibrant Core Marker
         drawCircle(
             color = markerColor.copy(alpha = lineAlpha),
             center = anchorPoint,
             radius = circleRadius
         )
 
+        // 4. Inner White Accent Center Dot
         drawCircle(
-            color = markerColor.copy(alpha = lineAlpha),
+            color = Color.White.copy(alpha = 0.9f * lineAlpha),
             center = anchorPoint,
-            radius = outerCircleRadius,
-            style = Stroke(width = strokeWidthPx)
+            radius = circleRadius * 0.4f
         )
     }
 }

@@ -267,6 +267,7 @@
     <string name="back_icon_desc_">Back</string>
     <string name="add_icon_desc_">Add</string>
     <string name="search_exercise_placeholder_">Search exercise name</string>
+    <string name="search_workouts_placeholder_">Search workout name</string>
     <string name="all_exercises_title_">All Exercises</string>
     <string name="no_exercises_title">No exercises found</string>
     <string name="no_exercises_description">
@@ -403,5 +404,19 @@
     <string name="no_workouts_title">No workouts available right now</string>
     <string name="no_workouts_subtitle">Workouts will be added soon, stay tuned for updates.</string>
     <string name="water_added_successfully">Water Added Successfully</string>
+
+
+    <!-- Congratulation Overlay (M3 Expressive) -->
+    <string name="congrats_calories_title">Daily Calories Reached! &#x1F963;</string>
+    <string name="congrats_calories_headline">AWESOME JOB!</string>
+    <string name="congrats_calories_subtitle">You hit your daily calorie goal 100%! Keep up this incredible energy!</string>
+    <string name="congrats_water_title">Hydration Goal Achieved! &#x1F4A7;</string>
+    <string name="congrats_water_headline">SUPER HYDRATED!</string>
+    <string name="congrats_water_subtitle">You hit your daily water goal 100%! Your body is fully refreshed and happy!</string>
+    <string name="congrats_pill_calories">CALORIES 100%</string>
+    <string name="congrats_pill_water">HYDRATION 100%</string>
+    <string name="congrats_button_continue">CONTINUE</string>
+    <string name="congrats_button_ok">Awesome!</string>
+    <string name="congrats_goal_completed">Goal Completed</string>
 
 </resources>

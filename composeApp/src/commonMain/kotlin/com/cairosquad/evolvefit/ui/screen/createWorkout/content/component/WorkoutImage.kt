@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.component.ImagePicker
 import com.cairosquad.evolvefit.ui.component.UiImageDisplayer
 import com.cairosquad.evolvefit.viewmodel.onboarding.models.UiImage
@@ -40,7 +41,7 @@ fun WorkoutImage(
             modifier = Modifier
                 .size(100.dp)
                 .background(Theme.color.surfaces.surfaceContainer)
-                .clickable(onClick = onImagePickerClick),
+                .bouncyClickable(onClick = onImagePickerClick),
             contentAlignment = Alignment.Center
         ) {
             if (isImagePickerOpen) {

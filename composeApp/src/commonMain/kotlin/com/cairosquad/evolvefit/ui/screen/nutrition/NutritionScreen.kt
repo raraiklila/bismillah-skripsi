@@ -39,6 +39,7 @@ fun NutritionScreen(
         NutritionContent(
             state = state,
             listener = nutritionViewModel,
+            viewModel = nutritionViewModel,
         )
     }
 }

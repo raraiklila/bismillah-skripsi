@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.ExerciseCard
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.workout_details.WorkoutDetailsScreenState
 import com.cairosquad.evolvefit.viewmodel.workout_details.WorkoutDetailsScreenState.ExerciseType
 import evolvefit.composeapp.generated.resources.Res
@@ -54,8 +55,8 @@ fun Exercises(
                 title = exercise.name,
                 model = exercise.images.firstOrNull() ?: "",
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { onExerciseClick(exercise) },
+                    .clip(Theme.shapes.cardSmallShape)
+                    .bouncyClickable { onExerciseClick(exercise) },
                 measurementContent = {
                     MeasurementRow(
                         specificationString = when (exercise.type) {

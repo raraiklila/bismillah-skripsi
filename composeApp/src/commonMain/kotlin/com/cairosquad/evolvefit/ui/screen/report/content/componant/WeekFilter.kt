@@ -1,29 +1,33 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.arrow_down
 import evolvefit.composeapp.generated.resources.ic_arrow_down
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+import androidx.compose.foundation.border
 
 @Composable
 fun WeekFilter(
@@ -32,32 +36,38 @@ fun WeekFilter(
     isDropDownMenuDown: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val rotation by animateFloatAsState(
+        targetValue = if (isDropDownMenuDown) 180f else 0f,
+        animationSpec = AppMotion.SpringTokens.fastSpatial(),
+        label = "M3WeekFilterArrow"
+    )
+
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(Theme.color.surfaces.surfaceContainer)
+            .clip(CircleShape)
             .border(
-                color = Theme.color.surfaces.outlineVariant,
-                shape = RoundedCornerShape(8.dp),
-                width = 0.5.dp
+                width = 1.dp,
+                color = Theme.color.surfaces.outline.copy(alpha = 0.20f),
+                shape = CircleShape
             )
-            .clickable(onClick = onMenuClick)
-            .padding(8.dp),
+            .background(Theme.color.surfaces.surfaceContainer)
+            .bouncyClickable(onClick = onMenuClick)
+            .padding(horizontal = 14.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
             text = currentWeek,
             style = Theme.textStyle.body.mediumMedium12,
-            color = Theme.color.surfaces.onSurfaceVariant
+            color = Theme.color.surfaces.onSurface
         )
         Image(
             modifier = Modifier
-                .size(12.dp)
-                .scale(scaleY = if (isDropDownMenuDown) -1f else 1f, scaleX = 1f),
+                .size(14.dp)
+                .graphicsLayer { rotationZ = rotation },
             painter = painterResource(Res.drawable.arrow_down),
             contentDescription = stringResource(Res.string.ic_arrow_down),
-            colorFilter = ColorFilter.tint(Theme.color.surfaces.onSurfaceVariant)
+            colorFilter = ColorFilter.tint(Theme.color.surfaces.onSurface)
         )
     }
 }

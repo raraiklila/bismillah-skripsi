@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.util.noRippleClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.copy_link
@@ -112,7 +113,7 @@ fun ShareOptionItem(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .noRippleClickable(onClick = onClick),
+            .bouncyClickable(onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp)
 
     ) {
@@ -120,7 +121,6 @@ fun ShareOptionItem(
             modifier = Modifier
                 .size(48.dp)
                 .clip(shape = CircleShape)
-                .clickable(onClick = onClick)
                 .background(Theme.color.surfaces.surfaceContainer, CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -144,8 +144,8 @@ fun ShareActionRow(icon: Painter, label: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onClick() }
+            .clip(Theme.shapes.cardSmallShape)
+            .bouncyClickable { onClick() }
             .padding(vertical = 8.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

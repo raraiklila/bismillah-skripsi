@@ -23,6 +23,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import com.cairosquad.evolvefit.design_system.component.ExpressiveLinearProgressIndicator
+import com.cairosquad.evolvefit.design_system.component.ProgressIndicatorStyle
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -101,9 +103,9 @@ private fun SimpleNutritionCard(
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(Theme.shapes.cardShape)
             .background(Theme.color.surfaces.surfaceContainer)
-            .padding(12.dp)
+            .padding(14.dp)
     ) {
         SimpleNutritionCardHeader(
             icon = icon,
@@ -186,7 +188,7 @@ private fun NutritionIcon(
         modifier = modifier
             .clip(CircleShape)
             .size(32.dp)
-            .background(Theme.color.surfaces.surfaceVariant),
+            .background(iconTint.copy(alpha = 0.15f)),
         contentAlignment = Alignment.Center
     ) {
         Icon(
@@ -248,33 +250,25 @@ private fun SimpleNutritionCardProgressBar(
     val animatedProgress by animateFloatAsState(
         targetValue = if (startAnimation) progress else 0f,
         animationSpec = tween(
-            durationMillis = (NUTRITION_CARD_ANIMATION_UNIT_DURATION * progress).toInt(),
+            durationMillis = (NUTRITION_CARD_ANIMATION_UNIT_DURATION * progress).toInt().coerceAtLeast(300),
             delayMillis = NUTRITION_CARD_ANIMATION_DELAY,
             easing = LinearOutSlowInEasing
         ),
+        label = "NutritionProgressAnimation"
     )
 
     LaunchedEffect(progress) {
         startAnimation = true
     }
 
-    Box(
+    ExpressiveLinearProgressIndicator(
+        progress = animatedProgress,
+        style = ProgressIndicatorStyle.Wavy,
+        indicatorColor = progressColor,
+        trackColor = Theme.color.surfaces.surfaceVariant,
+        trackThickness = 8.dp,
         modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
-            .fillMaxWidth()
-            .height(8.dp)
-            .background(Theme.color.surfaces.surfaceVariant)
-            .animateContentSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(24.dp))
-                .fillMaxHeight()
-                .fillMaxWidth(animatedProgress)
-                .background(progressColor)
-                .animateContentSize()
-        )
-    }
+    )
 }
 
 @Preview

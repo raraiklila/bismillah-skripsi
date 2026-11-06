@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionInteractionListener
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionScreenState
 import evolvefit.composeapp.generated.resources.Res
@@ -60,9 +60,9 @@ fun TodayMealsSummary(
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(Theme.shapes.cardShape)
                 .background(Theme.color.surfaces.surfaceContainer)
-                .padding(vertical = 16.dp, horizontal = 12.dp)
+                .padding(vertical = 16.dp, horizontal = 16.dp)
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(76.dp),
@@ -107,14 +107,18 @@ fun TodayMealsSummary(
     }
 }
 @Composable
-private fun AddMealButton(listener: NutritionInteractionListener){
-    TextButton(
-        onClick = {
-            listener.onAddMealSheetClicked() }
+private fun AddMealButton(listener: NutritionInteractionListener) {
+    Row(
+        modifier = Modifier
+            .clip(Theme.shapes.chipShape)
+            .background(Theme.color.brand.primary.copy(alpha = 0.12f))
+            .bouncyClickable(onClick = { listener.onAddMealSheetClicked() })
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Icon(
-            modifier = Modifier
-                .padding(horizontal = 8.dp),
+            modifier = Modifier.size(16.dp),
             painter = painterResource(Res.drawable.ic_plus),
             contentDescription = null,
             tint = Theme.color.brand.primary

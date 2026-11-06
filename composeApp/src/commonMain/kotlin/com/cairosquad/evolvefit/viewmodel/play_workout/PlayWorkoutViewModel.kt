@@ -73,7 +73,13 @@ class PlayWorkoutViewModel(
             return
         }
 
-        updateState { it.copy(stage = Stage.FINISH, totalTimeMinutes = totalTimeSoFarMinutes) }
+        updateState {
+            it.copy(
+                stage = Stage.FINISH,
+                totalTimeMinutes = totalTimeSoFarMinutes,
+                totalTimeSeconds = totalTimeSoFarSeconds
+            )
+        }
 
         tryToCall(
             block = ::onFinishBlock,
@@ -142,6 +148,9 @@ class PlayWorkoutViewModel(
 
     private val totalTimeSoFarMinutes: Int
         get() = ((Clock.System.now().toEpochMilliseconds() - startTimeMilli) / 1000 / 60).toInt()
+
+    private val totalTimeSoFarSeconds: Int
+        get() = ((Clock.System.now().toEpochMilliseconds() - startTimeMilli) / 1000).toInt()
 
     companion object {
         const val GET_READY_TIME_IN_SECONDS = 10

@@ -263,6 +263,7 @@
     <string name="back_icon_desc_">رجوع</string>
     <string name="add_icon_desc_">إضافة</string>
     <string name="search_exercise_placeholder_">ابحث عن اسم التمرين</string>
+    <string name="search_workouts_placeholder_">ابحث عن خطة التمرين</string>
     <string name="all_exercises_title_">جميع التمارين</string>
     <string name="no_exercises_title">لم يتم العثور على تمارين</string>
     <string name="no_exercises_description">
@@ -399,4 +400,15 @@
     <string name="next_button">التالي</string>
     <string name="error_meal_not_found">لم يتم العثور على الوجبة</string>
     <string name="error_unknown">حدث خطأ، يرجى المحاولة مرة أخرى</string>
+    <string name="congrats_calories_headline">عمل رائع!</string>
+    <string name="congrats_calories_title">تم الوصول للسعرات اليومية! &#x1F963;</string>
+    <string name="congrats_calories_subtitle">لقد حققت هدفك اليومي بنسبة 100%! استمر في هذا الأداء الرائع!</string>
+    <string name="congrats_water_headline">ترطيب ممتاز!</string>
+    <string name="congrats_water_title">تم تحقيق هدف شرب الماء! &#x1F4A7;</string>
+    <string name="congrats_water_subtitle">لقد حققت هدف شرب الماء اليومي بنسبة 100%! جسمك منتعش وصحي!</string>
+    <string name="congrats_pill_calories">السعرات 100%</string>
+    <string name="congrats_pill_water">الترطيب 100%</string>
+    <string name="congrats_button_continue">متابعة</string>
+    <string name="congrats_button_ok">رائع!</string>
+    <string name="congrats_goal_completed">اكتمل الهدف</string>
 </resources>

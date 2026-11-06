@@ -38,6 +38,7 @@ class HomeViewModel(
 
     fun refreshData() {
         loadNutrition()
+        loadProgress()
     }
 
     private fun loadAllData() {

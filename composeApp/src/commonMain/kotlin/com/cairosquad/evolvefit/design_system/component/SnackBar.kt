@@ -78,26 +78,27 @@ fun SnackBar(
             )
             .padding(horizontal = 16.dp)
             .dropShadow(
-                shape = RoundedCornerShape(8.dp),
+                shape = Theme.shapes.snackbarShape,
                 color = shadowAnimatedColor,
                 offsetX = 0.dp,
-                offsetY = 40.dp,
-                blur = 80.dp,
+                offsetY = 16.dp,
+                blur = 32.dp,
                 spread = 0.dp
             ),
         visible = isVisible,
-        enter = slideInVertically(initialOffsetY = {
-            it + with(density) { paddingBottom.roundToPx() } }
-        ) + fadeIn(),
-        exit =
-            slideOutVertically(
-                targetOffsetY = { it + with(density) {paddingBottom.roundToPx() } }
-            ) + fadeOut()
+        enter = slideInVertically(
+            initialOffsetY = { it + with(density) { paddingBottom.roundToPx() } },
+            animationSpec = androidx.compose.animation.core.tween(350, easing = com.cairosquad.evolvefit.design_system.theme.AppMotion.EmphasizedEasing)
+        ) + fadeIn(animationSpec = androidx.compose.animation.core.tween(250)),
+        exit = slideOutVertically(
+            targetOffsetY = { it + with(density) { paddingBottom.roundToPx() } },
+            animationSpec = androidx.compose.animation.core.tween(250, easing = com.cairosquad.evolvefit.design_system.theme.AppMotion.EmphasizedAccelerate)
+        ) + fadeOut(animationSpec = androidx.compose.animation.core.tween(200))
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(Theme.shapes.snackbarShape)
                 .background(backgroundColor)
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,

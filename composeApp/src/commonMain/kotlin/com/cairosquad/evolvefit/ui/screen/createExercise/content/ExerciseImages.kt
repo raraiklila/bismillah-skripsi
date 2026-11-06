@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.component.UiImageDisplayer
 import com.cairosquad.evolvefit.viewmodel.onboarding.models.UiImage
 import evolvefit.composeapp.generated.resources.Res
@@ -69,15 +70,15 @@ fun ImageBox(
     Box(
         modifier = modifier
             .size(100.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(Theme.shapes.cardSmallShape)
             .background(Theme.color.surfaces.surfaceContainer)
-            .clickable { onClick() },
+            .bouncyClickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (image != null) {
             UiImageDisplayer(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(Theme.shapes.cardSmallShape)
                     .fillMaxSize(),
                 image = image,
                 contentDescription = stringResource(Res.string.exercise_image),

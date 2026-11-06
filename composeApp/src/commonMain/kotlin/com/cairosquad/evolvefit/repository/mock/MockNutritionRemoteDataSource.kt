@@ -73,7 +73,7 @@ class MockNutritionRemoteDataSource : NutritionRemoteDataSource {
             name = "Oatmeal with Berries",
             type = MealType.BREAKFAST,
             calories = 280,
-            imageUrl = "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=400"
+            imageUrl = "https://images.unsplash.com/photo-1497888329096-51c27beff665?w=400"
         ),
         SuggestedMealDto(
             id = "meal-3",
@@ -128,7 +128,7 @@ class MockNutritionRemoteDataSource : NutritionRemoteDataSource {
             fat = 5,
             type = MealType.BREAKFAST,
             ingredients = listOf("Oats", "Blueberries", "Strawberries", "Honey", "Milk"),
-            imageUrl = "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=400"
+            imageUrl = "https://images.unsplash.com/photo-1497888329096-51c27beff665?w=400"
         ),
         "meal-3" to MealDto(
             id = "meal-3",

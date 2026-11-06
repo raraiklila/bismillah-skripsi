@@ -16,9 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import com.cairosquad.evolvefit.design_system.component.CustomTick
+import com.cairosquad.evolvefit.design_system.component.M3ExpressiveCheckbox
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -27,37 +32,48 @@ fun <T> CustomDropdownMenu(
     items: List<T>,
     onItemSelected: (T) -> Unit,
     isChecked: (T) -> Boolean,
+    isSingleChoice: Boolean = false,
     labelProvider: @Composable (T) -> String
 ) {
     Column(
         modifier = Modifier
             .background(
                 color = Theme.color.surfaces.surfaceContainer,
-                shape = RoundedCornerShape(8.dp)
+                shape = Theme.shapes.cardShape
             )
-            .padding(16.dp),
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         items.forEach { item ->
+            val checked = isChecked(item)
             Row(
                 modifier = modifier
-                    .fillMaxWidth().clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { onItemSelected(item) },
+                    .fillMaxWidth()
+                    .clip(Theme.shapes.small)
+                    .bouncyClickable { onItemSelected(item) }
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = labelProvider(item),
-                    style = Theme.textStyle.body.mediumMedium14,
-                    color = Theme.color.surfaces.onSurfaceContainer
+                    style = if (checked) Theme.textStyle.body.mediumMedium14.copy(fontWeight = FontWeight.SemiBold)
+                            else Theme.textStyle.body.mediumMedium14,
+                    color = if (checked) Theme.color.surfaces.onSurface
+                            else Theme.color.surfaces.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                CustomTick(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    isChecked = isChecked(item),
-                )
+                if (isSingleChoice) {
+                    CustomTick(
+                        isChecked = checked,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                } else {
+                    M3ExpressiveCheckbox(
+                        isChecked = checked,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                }
             }
         }
     }

@@ -22,9 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.ui.screen.nutrition.content.component.CongratsOverlay
+import com.cairosquad.evolvefit.ui.screen.nutrition.content.component.CongratsType
 import com.cairosquad.evolvefit.ui.screen.nutrition.content.component.NutritionSummaryCard
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionInteractionListener
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionScreenState
+import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionViewModel
 import com.cairosquad.evolvefit.viewmodel.nutrition.toMealIcon
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.kcal_unit
@@ -36,17 +39,36 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun NutritionSuccessScreen(
     state: NutritionScreenState,
-    listener: NutritionInteractionListener
+    listener: NutritionInteractionListener,
+    viewModel: NutritionViewModel
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.color.surfaces.surface)
-    ) {
-        item { NutritionSummaryCard(listener = listener, state = state) }
-        item { TodayMealsSummary(state = state, listener = listener) }
-        item { SuggestedMeals(state = state, listener = listener) }
-        mealHistorySection(state, listener)
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.color.surfaces.surface)
+        ) {
+            item { NutritionSummaryCard(listener = listener, state = state) }
+            item { TodayMealsSummary(state = state, listener = listener) }
+            item { SuggestedMeals(state = state, listener = listener) }
+            mealHistorySection(state, listener)
+        }
+
+        CongratsOverlay(
+            isVisible = state.isCongratsCaloriesVisible,
+            type = CongratsType.CALORIES,
+            currentValue = state.todayConsumedCalories,
+            goalValue = state.dailyCaloriesGoal,
+            onDismiss = { viewModel.onDismissCongratsCalories() }
+        )
+
+        CongratsOverlay(
+            isVisible = state.isCongratsWaterVisible,
+            type = CongratsType.WATER,
+            currentValue = state.todayConsumedWater,
+            goalValue = state.dailyWaterGoal,
+            onDismiss = { viewModel.onDismissCongratsWater() }
+        )
     }
 }
 

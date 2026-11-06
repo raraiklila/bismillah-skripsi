@@ -53,7 +53,7 @@ fun HomeProgressBox(
     AnimatedVisibility(visible = progress != null) {
         Column(
             modifier = modifier
-                .clip(RoundedCornerShape(8.dp))
+                .clip(Theme.shapes.cardShape)
                 .fillMaxWidth()
                 .background(Theme.color.surfaces.surfaceContainer)
                 .padding(
@@ -119,26 +119,21 @@ private fun WeeklyProgressBar(
     progressDays: Map<Int, Boolean>,
     modifier: Modifier = Modifier
 ) {
-    FlowRow(
-        modifier = modifier
-            .fillMaxWidth(),
+    val displayDays = if (progressDays.isNotEmpty() && progressDays.size == WEEK_DAYS_NUM) {
+        progressDays
+    } else {
+        (1..WEEK_DAYS_NUM).associateWith { progressDays[it] ?: false }
+    }
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        maxItemsInEachRow = WEEK_DAYS_NUM
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        progressDays.entries.forEach { entry ->
+        displayDays.entries.forEach { entry ->
             DayBox(
                 day = entry.key,
                 isCompleted = entry.value,
-                modifier = Modifier
-                    .then(
-                        if (entry.key != progressDays.entries.last().key) {
-                            Modifier
-                                .padding(end = 8.dp)
-                        } else {
-                            Modifier
-                        }
-                    )
             )
         }
     }
@@ -153,7 +148,7 @@ private fun DayBox(
     val backgroundColor = if (isCompleted) {
         Theme.color.brand.primary
     } else {
-        Theme.color.surfaces.outlineVariant
+        Theme.color.surfaces.surfaceVariant.copy(alpha = 0.65f)
     }
 
     Box(
@@ -174,8 +169,7 @@ private fun DayBox(
                     painter = painterResource(Res.drawable.ic_thin_check_mark),
                     contentDescription = stringResource(Res.string.completed),
                     tint = Theme.color.brand.onPrimary,
-                    modifier = Modifier
-                        .size(24.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             } else {
                 Text(
@@ -201,16 +195,14 @@ private fun StatsRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                vertical = 8.dp
-            ),
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         StatsSection(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(0.28f),
+                .padding(start = 4.dp)
+                .weight(1.15f),
             iconRes = Res.drawable.ic_crown,
             title = stringResource(Res.string.the_goal),
             value = goal,
@@ -220,13 +212,14 @@ private fun StatsRow(
             color = Theme.color.surfaces.outlineVariant,
             thickness = 1.dp,
             modifier = Modifier
-                .height(40.dp)
+                .height(36.dp)
+                .padding(horizontal = 4.dp)
         )
 
         StatsSection(
             modifier = Modifier
-                .weight(0.43f)
-                .padding(start = 16.dp),
+                .weight(1.05f)
+                .padding(start = 8.dp),
             iconRes = Res.drawable.ic_scale,
             title = stringResource(Res.string.current_weight),
             value = "${currentWeight.toString(1)} $weightUnit",
@@ -236,14 +229,15 @@ private fun StatsRow(
             color = Theme.color.surfaces.outlineVariant,
             thickness = 1.dp,
             modifier = Modifier
-                .height(40.dp)
+                .height(36.dp)
+                .padding(horizontal = 4.dp)
         )
 
         StatsSection(
             modifier = Modifier
-                .padding(end = 8.dp)
-                .weight(0.28f)
-                .padding(start = 16.dp),
+                .padding(end = 4.dp)
+                .weight(0.80f)
+                .padding(start = 8.dp),
             iconRes = Res.drawable.ic_progress,
             title = stringResource(Res.string.activity),
             value = "$activityPercentage %",
@@ -260,7 +254,7 @@ private fun StatsSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -270,15 +264,14 @@ private fun StatsSection(
                 painter = painterResource(iconRes),
                 contentDescription = title,
                 tint = Theme.color.brand.primary,
-                modifier = Modifier
-                    .size(16.dp)
+                modifier = Modifier.size(16.dp)
             )
 
             Text(
                 text = title,
                 style = Theme.textStyle.label.smallRegular12,
                 color = Theme.color.surfaces.onSurfaceVariant,
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -287,8 +280,9 @@ private fun StatsSection(
             text = value,
             style = Theme.textStyle.body.mediumMedium14,
             color = Theme.color.surfaces.onSurfaceContainer,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            softWrap = true
         )
     }
 }

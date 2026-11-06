@@ -42,13 +42,39 @@ class MockReportRemoteDataSource(
             WorkoutsByDay(day = day, workoutsCount = count)
         }
 
+        val allWorkouts = (workoutRemoteDataSource.getSuggestedWorkouts() + workoutRemoteDataSource.getCommunityWorkouts()).distinctBy { it.name }
+        val workoutMap = allWorkouts.associateBy { it.name }
+
+        // Dynamic muscle tracking based on workouts in history
+        val focusAreaCount = mutableMapOf<String, Int>()
+        focusAreaCount["CHEST"] = 4
+        focusAreaCount["LEGS"] = 3
+        focusAreaCount["CORE"] = 2
+        focusAreaCount["ARMS"] = 1
+
+        history.forEach { item ->
+            val workout = workoutMap[item.name]
+            val areas = workout?.focusArea?.map { it.name }
+                ?: if (item.name.contains("Core", ignoreCase = true)) listOf("CORE")
+                else if (item.name.contains("Leg", ignoreCase = true)) listOf("LEGS")
+                else if (item.name.contains("Upper", ignoreCase = true) || item.name.contains("Arm", ignoreCase = true)) listOf("ARMS")
+                else listOf("CHEST", "CORE")
+
+            areas.forEach { area ->
+                focusAreaCount[area] = (focusAreaCount[area] ?: 0) + 3
+            }
+        }
+
+        val totalAreaHits = focusAreaCount.values.sum().coerceAtLeast(1)
+        val dynamicFocusAreas = focusAreaCount.map { (area, count) ->
+            TopFocusArea(
+                area = area,
+                percentage = kotlin.math.round((count.toDouble() / totalAreaHits.toDouble()) * 100.0)
+            )
+        }.sortedByDescending { it.percentage }
+
         return WorkoutReportDto(
-            topFocusAreas = listOf(
-                TopFocusArea(area = "CHEST", percentage = 0.35),
-                TopFocusArea(area = "LEGS", percentage = 0.30),
-                TopFocusArea(area = "CORE", percentage = 0.20),
-                TopFocusArea(area = "ARMS", percentage = 0.15),
-            ),
+            topFocusAreas = dynamicFocusAreas,
             totalTimeSpentByDay = totalTimeSpentByDay,
             totalTimeSpentSeconds = totalTimeSpentSeconds,
             totalWorkouts = totalWorkouts,

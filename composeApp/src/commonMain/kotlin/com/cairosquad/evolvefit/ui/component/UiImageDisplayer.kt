@@ -14,6 +14,7 @@ import coil3.compose.AsyncImage
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import com.cairosquad.evolvefit.viewmodel.onboarding.models.UiImage
 import evolvefit.composeapp.generated.resources.Res
+import evolvefit.composeapp.generated.resources.im_default_profile
 import evolvefit.composeapp.generated.resources.im_img
 import io.github.vinceglb.filekit.PlatformFile
 import org.jetbrains.compose.resources.painterResource
@@ -37,15 +38,26 @@ fun UiImageDisplayer(
         }
 
         is UiImage.ImageUrl -> {
-            NetworkImage(
-                modifier = Modifier.size(defaultImageSize),
-                defaultImage = painterResource(Res.drawable.im_img),
-                loadingPlaceHolder = painterResource(Res.drawable.im_img),
-                model = image.url,
-                contentDescription = contentDescription,
-                placeholderImageSize = DpSize(defaultImageSize, defaultImageSize),
-                contentScale = contentScale,
-            )
+            if (image.url.isNotBlank()) {
+                NetworkImage(
+                    modifier = Modifier.size(defaultImageSize),
+                    defaultImage = painterResource(Res.drawable.im_default_profile),
+                    loadingPlaceHolder = painterResource(Res.drawable.im_default_profile),
+                    model = image.url,
+                    contentDescription = contentDescription,
+                    placeholderImageSize = DpSize(defaultImageSize, defaultImageSize),
+                    contentScale = contentScale,
+                )
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.im_default_profile),
+                    contentDescription = contentDescription,
+                    contentScale = contentScale,
+                    modifier = Modifier
+                        .size(defaultImageSize)
+                        .clip(CircleShape)
+                )
+            }
         }
 
         is UiImage.ImageResource -> {

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.util.noRippleClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.ic_end_arrow
@@ -44,7 +45,7 @@ fun SeeAll(
         Row(
             modifier = Modifier
                 .wrapContentWidth()
-                .clickable(onClick = onViewAllClick),
+                .bouncyClickable(onClick = onViewAllClick),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

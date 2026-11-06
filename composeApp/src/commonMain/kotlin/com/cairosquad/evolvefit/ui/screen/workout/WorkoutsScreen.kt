@@ -3,7 +3,6 @@ package com.cairosquad.evolvefit.ui.screen.workout
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -11,8 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.component.AnimatedLoadingIndicator
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.navigation.NavBarRoute
 import com.cairosquad.evolvefit.ui.navigation.navBar.Scaffold
 import com.cairosquad.evolvefit.ui.screen.workout.content.WorkoutsScreenContent
@@ -69,20 +70,20 @@ fun AddWorkoutBtn(
     }
     FloatingActionButton(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.bouncyClickable(onClick = onClick, enabled = !isLoading),
         containerColor = Theme.color.brand.primary,
-        shape = CircleShape,
+        shape = Theme.shapes.cardShape,
     ) {
         if (isLoading) {
-            CircularProgressIndicator(
-                color = Theme.color.surfaces.surface,
-                modifier = Modifier.size(24.dp)
+            AnimatedLoadingIndicator(
+                indicatorColor = Theme.color.surfaces.surface,
+                size = 24.dp
             )
         } else {
             Icon(
                 painter = painterResource(Res.drawable.ic_plus),
                 contentDescription = stringResource(Res.string.create_workout_title_),
-                modifier = Modifier.padding(12.dp).size(24.dp)
+                modifier = Modifier.padding(14.dp).size(24.dp)
             )
         }
     }

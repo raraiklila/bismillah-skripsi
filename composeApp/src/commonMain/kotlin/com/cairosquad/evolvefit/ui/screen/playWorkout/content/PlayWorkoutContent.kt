@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -168,21 +169,25 @@ private fun EndWorkoutConfirmation(
         )
 
         Spacer(Modifier.weight(lowerSpaceWeight))
-        PrimaryButton(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            text = stringResource(Res.string.stay_in_workout_button),
-            onClick = onClinkStayInWorkout
-        )
-        SecondaryButton(
-            modifier = Modifier
-                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .padding(bottom = 24.dp)
-                .navigationBarsPadding()
-                .padding(horizontal = 16.dp),
-            text = stringResource(Res.string.end_workout_confirm_button),
-            onClick = onClinkEnd
-        )
+                .navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(Res.string.stay_in_workout_button),
+                onClick = onClinkStayInWorkout
+            )
+            SecondaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                enabledTextColor = Theme.color.system.error,
+                text = stringResource(Res.string.end_workout_confirm_button),
+                onClick = onClinkEnd
+            )
+        }
     }
 }

@@ -50,8 +50,8 @@ fun WorkoutCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(140.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .height(150.dp)
+            .clip(Theme.shapes.cardShape)
     ) {
         NetworkImage(
             modifier = Modifier.fillMaxSize(),

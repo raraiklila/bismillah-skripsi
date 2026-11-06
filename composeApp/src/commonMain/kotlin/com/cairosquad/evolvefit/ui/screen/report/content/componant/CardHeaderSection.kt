@@ -27,26 +27,31 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun CardHeaderSection(
     painter: Painter,
     tint: Color,
-    title: String
+    title: String,
+    containerColor: Color = tint.copy(alpha = 0.15f),
+    modifier: Modifier = Modifier
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Image(
             modifier = Modifier.size(32.dp)
-                .background(color = Theme.color.surfaces.surfaceVariant, shape = CircleShape)
+                .background(color = containerColor, shape = CircleShape)
                 .padding(8.dp),
             painter = painter,
-            contentDescription = "Water drop icon",
+            contentDescription = title.ifBlank { null },
             colorFilter = ColorFilter.tint(tint)
         )
-        Text(
-            modifier = Modifier.weight(1f),
-            text = title,
-            style = Theme.textStyle.title.largeBold14,
-            color = Theme.color.surfaces.onSurfaceContainer
-        )
+        if (title.isNotBlank()) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = title,
+                style = Theme.textStyle.title.largeBold14,
+                color = Theme.color.surfaces.onSurfaceContainer
+            )
+        }
     }
 }
 

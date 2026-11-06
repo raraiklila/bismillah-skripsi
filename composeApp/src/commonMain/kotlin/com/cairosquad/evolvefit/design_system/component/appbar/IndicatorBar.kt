@@ -1,5 +1,11 @@
 package com.cairosquad.evolvefit.design_system.component.appbar
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.ic_back
 import org.jetbrains.compose.resources.painterResource
@@ -45,8 +52,8 @@ fun IndicatorBar(
         Icon(
             modifier = Modifier
                 .size(40.dp)
-                .clip(CircleShape)
-                .clickable(onClick = onClickLeadingIcon)
+                .clip(Theme.shapes.full)
+                .bouncyClickable(onClick = onClickLeadingIcon)
                 .padding(8.dp),
             painter = leadingIcon,
             contentDescription = "Back",
@@ -62,15 +69,29 @@ fun IndicatorBar(
         )
 
         if (isStepsCountVisible) {
-            Text(
-                modifier = Modifier
-                    .padding(start = 12.dp)
-                    .width(40.dp),
-                text = "$currentStep/$totalSteps",
-                color = Theme.color.surfaces.onSurfaceVariant,
-                style = Theme.textStyle.label.smallRegular12,
-                textAlign = TextAlign.Center
-            )
+            AnimatedContent(
+                targetState = currentStep,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        (slideInVertically { height -> height / 2 } + fadeIn())
+                            .togetherWith(slideOutVertically { height -> -height / 2 } + fadeOut())
+                    } else {
+                        (slideInVertically { height -> -height / 2 } + fadeIn())
+                            .togetherWith(slideOutVertically { height -> height / 2 } + fadeOut())
+                    }
+                },
+                label = "M3StepNumberTransition"
+            ) { step ->
+                Text(
+                    modifier = Modifier
+                        .padding(start = 12.dp)
+                        .width(44.dp),
+                    text = "$step/$totalSteps",
+                    color = Theme.color.surfaces.onSurfaceVariant,
+                    style = Theme.textStyle.label.mediumMedium16,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

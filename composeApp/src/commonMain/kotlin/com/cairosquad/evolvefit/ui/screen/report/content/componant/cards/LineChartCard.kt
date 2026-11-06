@@ -1,5 +1,6 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant.cards
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -57,7 +60,7 @@ fun LineChartCard(
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
-                    .height(108.dp)
+                    .height(150.dp)
                     .padding(end = 8.dp, bottom = 8.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -76,7 +79,7 @@ fun LineChartCard(
                         ChartGrid(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(96.dp)
+                                .height(144.dp)
                                 .padding(top = 6.dp),
                             gridLinesColor = gridLinesColor,
                             steps = 4
@@ -84,8 +87,8 @@ fun LineChartCard(
                     }
                     AnimatedLineChart(
                         modifier = Modifier
-                            .height(112.dp)
-                            .offset(y = (-6).dp),
+                            .height(150.dp)
+                            .offset(y = (-4).dp),
                         data = data,
                         toolTipValue = data.map { TimeUtil.formatDurationLabel(it) },
                         lineColor = lineColor,
@@ -102,13 +105,30 @@ fun LineChartCard(
                 ) {
                     barCenters.forEachIndexed { index, offset ->
                         val isMax = index == maxIndex
-                        Text(
-                            text = labels[index],
-                            color = if (isMax) focusedLabelColor else unFocusedLabelColor,
-                            style = Theme.textStyle.label.smallRegular12,
-                            modifier = Modifier
-                                .absoluteOffset(x = with(LocalDensity.current) { offset.x.toDp() } - 10.dp)
-                        )
+                        if (isMax) {
+                            Box(
+                                modifier = Modifier
+                                    .absoluteOffset(x = with(LocalDensity.current) { offset.x.toDp() } - 15.dp)
+                                    .clip(Theme.shapes.pillShape)
+                                    .background(Theme.color.brand.primaryContainer.copy(alpha = 0.5f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = labels[index],
+                                    color = Theme.color.brand.primary,
+                                    style = Theme.textStyle.label.labelSmallEmphasized
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = labels[index],
+                                color = unFocusedLabelColor,
+                                style = Theme.textStyle.label.smallRegular12,
+                                modifier = Modifier
+                                    .absoluteOffset(x = with(LocalDensity.current) { offset.x.toDp() } - 10.dp)
+                            )
+                        }
                     }
                 }
             }

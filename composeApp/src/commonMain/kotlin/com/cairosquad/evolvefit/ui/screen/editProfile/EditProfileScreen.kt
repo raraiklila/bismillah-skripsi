@@ -4,13 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.LabeledInputField
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
@@ -112,12 +117,15 @@ fun EditProfileScreenContent(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.statusBars).padding(top = 15.dp)
-            .windowInsetsPadding(WindowInsets.navigationBars),
+            .statusBarsPadding().padding(top = 15.dp)
+            .navigationBarsPadding()
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CustomAppBar(
@@ -135,7 +143,8 @@ fun EditProfileScreenContent(
         )
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -161,22 +170,18 @@ fun EditProfileScreenContent(
                     }
                 },
                 isEditScreen = true,
-                defaultSize = if (state.profile.imageUrl.isBlank()) 32.dp else 100.dp
+                defaultSize = 100.dp
             )
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = Theme.color.surfaces.surfaceContainer,
-                        shape = RoundedCornerShape(16.dp),
-                    )
-                    .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 LabeledInputField(
                     label = stringResource(Res.string.full_name),
-                    value = state.profile.fullName,
+                    value = state.profile.fullName.ifBlank { "EvolveFit User" },
                     onValueChange = listener::onFullNameChanged,
                     trailingIcon = Res.drawable.ic_pen,
                     isDividerVisible = true,
@@ -186,7 +191,7 @@ fun EditProfileScreenContent(
 
                 LabeledInputField(
                     label = stringResource(Res.string.email),
-                    value = state.profile.email,
+                    value = state.profile.email.ifBlank { "user@evolvefit.app" },
                     onValueChange = { },
                     readOnly = true,
                     trailingIcon = null,
@@ -195,6 +200,7 @@ fun EditProfileScreenContent(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val formattedDate = state.profile.dateOfBirth?.let { date ->
                         val day = date.dayOfMonth.toString().padStart(2, '0')
@@ -238,6 +244,7 @@ fun EditProfileScreenContent(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val heightUnit =
                         if (state.profile.preferredMeasurementStandard == MeasurementStandard.METRIC)
@@ -308,15 +315,20 @@ fun EditProfileScreenContent(
                     onClick = { listener.onWorkoutDaysClicked() }
                 )
             }
-
-            PrimaryButton(
-                modifier = Modifier
-                    .padding(top = 29.dp, bottom = 32.dp)
-                    .navigationBarsPadding(),
-                text = stringResource(Res.string.save_changes),
-                onClick = { listener.onSaveChangesClicked(state.profile) }
-            )
+            Spacer(modifier = Modifier.height(28.dp))
         }
+
+        PrimaryButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp, bottom = 16.dp),
+            text = stringResource(Res.string.save_changes),
+            onClick = {
+                focusManager.clearFocus()
+                listener.onSaveChangesClicked(state.profile)
+            }
+        )
     }
 
     when (state.bottomSheetType) {

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.evolvefit.design_system.component.appbar.CustomAppBar
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.component.RefreshBox
 import com.cairosquad.evolvefit.ui.screen.workoutHistory.content.WorkoutHistoryScreenErrorContent
 import com.cairosquad.evolvefit.ui.screen.workoutHistory.content.workoutHistoryScreenLoadingContent
@@ -87,7 +88,7 @@ private fun WorkoutHistoryContent(
                 Box(
                     modifier = Modifier.size(40.dp)
                         .clip(CircleShape)
-                        .clickable(onClick = listener::onBackClicked)
+                        .bouncyClickable(onClick = listener::onBackClicked)
                         .padding(8.dp)
                 ) {
                     Image(

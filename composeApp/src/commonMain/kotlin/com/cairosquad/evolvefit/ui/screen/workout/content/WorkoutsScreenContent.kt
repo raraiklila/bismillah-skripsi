@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.component.ExpressiveSearchBar
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.ui.component.RefreshBox
 import com.cairosquad.evolvefit.ui.screen.workout.AddWorkoutBtn
@@ -22,6 +24,8 @@ import com.cairosquad.evolvefit.ui.screen.workout.WorkoutsEmptyScreen
 import com.cairosquad.evolvefit.ui.screen.workout.content.compnent.WorkoutAppBar
 import com.cairosquad.evolvefit.viewmodel.workout.WorkoutInteractionListener
 import com.cairosquad.evolvefit.viewmodel.workout.WorkoutScreenState
+import evolvefit.composeapp.generated.resources.Res
+import evolvefit.composeapp.generated.resources.search_workouts_placeholder_
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

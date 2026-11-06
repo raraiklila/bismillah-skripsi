@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.onboarding.models.UiImage
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.ic_camera
@@ -57,7 +58,7 @@ fun UserProfileImage(
                     .size(100.dp)
                     .clip(CircleShape)
                     .background(Theme.color.surfaces.surfaceContainer)
-                    .clickable(onClick = onImagePickerClick),
+                    .bouncyClickable(onClick = onImagePickerClick),
                 contentAlignment = Alignment.Center
             ) {
                 if (isImagePickerOpen) {

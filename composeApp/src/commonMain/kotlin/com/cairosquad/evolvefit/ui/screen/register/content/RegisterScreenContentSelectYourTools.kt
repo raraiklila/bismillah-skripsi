@@ -46,7 +46,7 @@ fun RegisterScreenContentSelectYourTools(
             description = stringResource(Res.string.no_tools_description),
             isChecked = state.isNoEquipmentSelected,
             onCheckedChange = { listener.onNoEquipmentSelected() },
-            style = CheckboxStyle.Tick
+            style = CheckboxStyle.RadioButton
         )
 
         Text(
@@ -77,17 +77,14 @@ fun EquipmentsSection(
     ) {
         items(state.availableEquipments.toList()) { equipment ->
             val isSelected = state.selectedEquipments.contains(equipment.toolId)
-            val isEnabled = !state.isNoEquipmentSelected
 
             CheckboxItem(
                 text = equipment.toolName,
                 isChecked = isSelected,
                 onCheckedChange = {
-                    if (isEnabled) {
-                        listener.onEquipmentToggled(equipment.toolId)
-                    }
+                    listener.onEquipmentToggled(equipment.toolId)
                 },
-                style = CheckboxStyle.Tick
+                style = CheckboxStyle.Checkbox
             )
         }
     }

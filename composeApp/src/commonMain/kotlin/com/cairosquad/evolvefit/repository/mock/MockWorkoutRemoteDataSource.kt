@@ -3,6 +3,7 @@ package com.cairosquad.evolvefit.repository.mock
 import com.cairosquad.evolvefit.domain.model.FocusArea
 import com.cairosquad.evolvefit.repository.equipment.remote.dto.GymEquipmentDto
 import com.cairosquad.evolvefit.repository.exercise.remote.dto.ExerciseResponseDto
+import com.cairosquad.evolvefit.repository.exercise.remote.ExerciseRemoteDataSource
 import com.cairosquad.evolvefit.repository.workout.remote.WorkoutRemoteDataSource
 import com.cairosquad.evolvefit.repository.workout.remote.dto.CreateWorkoutRequest
 import com.cairosquad.evolvefit.repository.workout.remote.dto.FavoritesWorkoutDto
@@ -11,7 +12,9 @@ import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutDetailsDto
 import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutDto
 import com.cairosquad.evolvefit.repository.workout.remote.dto.WorkoutHistoryDto
 
-class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
+class MockWorkoutRemoteDataSource(
+    private val exerciseRemoteDataSource: ExerciseRemoteDataSource? = null
+) : WorkoutRemoteDataSource {
 
     private val mockWorkouts = mutableListOf(
         WorkoutDto(
@@ -364,23 +367,56 @@ class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
     }
 
     override suspend fun createWorkout(request: CreateWorkoutRequest): WorkoutDetailsDto {
-        val newId = "new-workout-${System.currentTimeMillis()}"
+        val newId = "new-workout-${kotlinx.datetime.Clock.System.now().toEpochMilliseconds()}"
+
+        val allKnownExercises = mutableMapOf<String, ExerciseResponseDto>()
+        presetWorkoutDetails.values.forEach { details ->
+            details.exercises.forEach { ex -> allKnownExercises[ex.id] = ex }
+        }
+        exerciseRemoteDataSource?.getAllExercises()?.forEach { ex ->
+            allKnownExercises[ex.id] = ex
+        }
+
+        val resolvedExercises = request.exercises.map { exId ->
+            allKnownExercises[exId] ?: ExerciseResponseDto(
+                id = exId,
+                name = "Exercise",
+                instructions = listOf("Follow standard exercise form"),
+                images = listOf("https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"),
+                gymEquipments = emptyList(),
+                focusArea = listOf("CHEST"),
+                exerciseType = "REPS",
+                reps = 10
+            )
+        }
+
+        val totalDuration = resolvedExercises.sumOf {
+            it.durationSeconds ?: ((it.reps ?: 10) * 3)
+        }.let { if (it > 0) it else 1800 }
+
+        val focusAreas = resolvedExercises.flatMap { ex ->
+            ex.focusArea.mapNotNull { name ->
+                runCatching { FocusArea.valueOf(name.uppercase()) }.getOrNull()
+            }
+        }.distinct().ifEmpty { listOf(FocusArea.CHEST, FocusArea.BACK) }
+
         val created = WorkoutDetailsDto(
             id = newId,
             name = request.name,
-            durationSeconds = 1800,
+            durationSeconds = totalDuration,
             imageUrl = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400",
             description = request.description,
-            level = request.level
+            level = request.level,
+            exercises = resolvedExercises
         )
         workoutDetailsMap[newId] = created
         mockWorkouts.add(
             WorkoutDto(
                 id = newId,
                 name = request.name,
-                durationSeconds = 1800,
+                durationSeconds = totalDuration,
                 imageUrl = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400",
-                focusArea = listOf(FocusArea.CHEST, FocusArea.BACK)
+                focusArea = focusAreas
             )
         )
         return created
@@ -456,7 +492,7 @@ class MockWorkoutRemoteDataSource : WorkoutRemoteDataSource {
     override suspend fun uploadWorkoutImage(
         fileBytes: ByteArray,
         fileName: String,
-        exerciseId: String
+        workoutId: String
     ): String {
         return "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400"
     }

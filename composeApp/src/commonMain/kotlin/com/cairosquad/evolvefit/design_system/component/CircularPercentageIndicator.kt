@@ -1,6 +1,5 @@
 package com.cairosquad.evolvefit.design_system.component
 
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -20,40 +19,38 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Material 3 Expressive Circular Progress Indicator.
+ * Following official https://m3.material.io/components/progress-indicators/overview:
+ * Features Emphasized Decelerate motion, rounded caps, and expressive typography.
+ */
 @Composable
 fun CircularProgressCard(
     modifier: Modifier = Modifier,
     percentage: Float,
     number: Int = 100,
     radius: Dp = 32.dp,
-    strokeWidth: Dp = 2.dp,
-    animationDuration: Int = 5_000,
-    animationDelay: Int = 0,
+    strokeWidth: Dp = 3.dp,
+    animationDuration: Int = 1200,
+    animationDelay: Int = 100,
     progressColor: Color,
-    backgroundColor: Color = Theme.color.surfaces.surfaceVariant
+    backgroundColor: Color = Theme.color.surfaces.surfaceVariant,
+    isWavy: Boolean = true
 ) {
-
     var hasAnimationPlayed by remember { mutableStateOf(false) }
 
-//    val animateCurrentPercentage by animateFloatAsState(
-//        targetValue = if (hasAnimationPlayed) percentage else 0f,
-//        animationSpec = tween(
-//            durationMillis = animationDuration,
-//            delayMillis = animationDelay,
-//            easing = LinearEasing
-//        )
-//    )
     val animateCurrentPercentage by animateFloatAsState(
-        targetValue = percentage,
+        targetValue = if (hasAnimationPlayed) percentage else 0f,
         animationSpec = tween(
             durationMillis = animationDuration,
             delayMillis = animationDelay,
-            easing = LinearEasing
+            easing = AppMotion.EmphasizedEasing
         ),
-        label = "progressAnimation"
+        label = "M3ExpressiveProgress"
     )
 
     LaunchedEffect(percentage) {
@@ -61,30 +58,66 @@ fun CircularProgressCard(
     }
 
     Box(
-        modifier = modifier
-            .size(radius * 2f + strokeWidth),
+        modifier = modifier.size(radius * 2f + strokeWidth),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(modifier = Modifier.size(radius * 2f)){
+        Canvas(modifier = Modifier.size(radius * 2f)) {
+            val strokeWidthPx = strokeWidth.toPx()
+            val r = (size.minDimension) / 2f
+            val cx = size.width / 2f
+            val cy = size.height / 2f
+
+            // Background track with smooth rounded caps
             drawArc(
                 color = backgroundColor,
-                -90f,
-                360f,
+                startAngle = -90f,
+                sweepAngle = 360f,
                 useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
             )
-            drawArc(
-                color = progressColor,
-                -90f,
-                360 * animateCurrentPercentage,
-                useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
-            )
+
+            // Expressive active progress arc
+            if (animateCurrentPercentage > 0.001f) {
+                val sweepAngle = (360f * animateCurrentPercentage).coerceIn(0f, 360f)
+                if (isWavy) {
+                    val wavePath = androidx.compose.ui.graphics.Path()
+                    val steps = (sweepAngle * 0.8f).toInt().coerceAtLeast(20)
+                    val startRad = (-90f * kotlin.math.PI / 180f).toFloat()
+                    val sweepRad = (sweepAngle * kotlin.math.PI / 180f).toFloat()
+                    val waveAmpPx = (2.5.dp).toPx()
+                    val waveCount = 12
+
+                    for (i in 0..steps) {
+                        val angle = startRad + (i.toFloat() / steps) * sweepRad
+                        val waveVal = kotlin.math.sin(waveCount * angle).toFloat()
+                        val currentR = r + waveVal * waveAmpPx
+
+                        val x = cx + currentR * kotlin.math.cos(angle)
+                        val y = cy + currentR * kotlin.math.sin(angle)
+
+                        if (i == 0) wavePath.moveTo(x, y) else wavePath.lineTo(x, y)
+                    }
+
+                    drawPath(
+                        path = wavePath,
+                        color = progressColor,
+                        style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                    )
+                } else {
+                    drawArc(
+                        color = progressColor,
+                        startAngle = -90f,
+                        sweepAngle = sweepAngle,
+                        useCenter = false,
+                        style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
+                    )
+                }
+            }
         }
         Text(
-            text = (animateCurrentPercentage * number).toInt().toString() + "%",
-            style = Theme.textStyle.headline.mediumMedium16,
-            color = Theme.color.surfaces.outline,
+            text = "${(animateCurrentPercentage * number).toInt()}%",
+            style = Theme.textStyle.headline.largeBold16,
+            color = Theme.color.surfaces.textColor,
         )
     }
 }

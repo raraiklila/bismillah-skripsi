@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
@@ -27,6 +30,7 @@ import com.cairosquad.evolvefit.design_system.component.appbar.ActionIconButton
 import com.cairosquad.evolvefit.design_system.component.appbar.CustomAppBar
 import com.cairosquad.evolvefit.design_system.component.InputField
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.component.ImagePicker
 import com.cairosquad.evolvefit.ui.screen.createExercise.content.component.EquipmentDropdownRow
 import com.cairosquad.evolvefit.ui.screen.createExercise.content.component.ExitCreationBottomSheet
@@ -63,6 +67,7 @@ fun CreateExerciseScreenContent(
     state: CreateExerciseState,
     listener: CreateExerciseInteractionListener
 ) {
+    val focusManager = LocalFocusManager.current
     val selectedImage1 = state.frontImage
     val selectedImage2 = state.backImage
     val uploadExercisesImg1 = if (selectedImage1 != null) {
@@ -133,7 +138,9 @@ fun CreateExerciseScreenContent(
             .fillMaxSize()
             .background(color = Theme.color.surfaces.surface)
             .padding(horizontal = 16.dp)
-            .windowInsetsPadding(WindowInsets.systemBars)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding()
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -175,7 +182,7 @@ fun CreateExerciseScreenContent(
                 Text(
                     modifier = Modifier
                         .padding(bottom = 24.dp)
-                        .clickable(onClick = listener::onStartImageClicked),
+                        .bouncyClickable(onClick = listener::onStartImageClicked),
                     text = stringResource(Res.string.upload_image),
                     style = Theme.textStyle.label.smallRegular12,
                     color = Theme.color.surfaces.onSurfaceVariant
@@ -211,21 +218,23 @@ fun CreateExerciseScreenContent(
                 AnimatedVisibility(
                     visible = state.isDurationChecked || state.isRepsChecked,
                 ) {
-                    InputField(
-                        modifier = Modifier.padding(bottom = 12.dp),
-                        value = state.measurementInputValue,
-                        onValueChange = listener::onMeasurementValueChanged,
-                        placeholder = when (state.measurementType) {
-                            CreateExerciseState.MeasurementType.DURATION ->
-                                stringResource(Res.string.add_duration_placeholder)
+                    androidx.compose.runtime.key(state.measurementType) {
+                        InputField(
+                            modifier = Modifier.padding(bottom = 12.dp),
+                            value = state.measurementInputValue,
+                            onValueChange = listener::onMeasurementValueChanged,
+                            placeholder = when (state.measurementType) {
+                                CreateExerciseState.MeasurementType.DURATION ->
+                                    stringResource(Res.string.add_duration_placeholder)
 
-                            CreateExerciseState.MeasurementType.REPS ->
-                                stringResource(Res.string.add_reps)
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        horizontalPadding = 12.dp,
-                        verticalPadding = 15.5.dp
-                    )
+                                CreateExerciseState.MeasurementType.REPS ->
+                                    stringResource(Res.string.add_reps)
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            horizontalPadding = 12.dp,
+                            verticalPadding = 15.5.dp
+                        )
+                    }
                 }
             }
             item {
@@ -252,12 +261,15 @@ fun CreateExerciseScreenContent(
         }
         PrimaryButton(
             modifier = Modifier
-                .padding(bottom = 24.dp, top = 16.dp)
-                .navigationBarsPadding(),
+                .fillMaxWidth()
+                .padding(bottom = 16.dp, top = 16.dp),
             isEnabled = listener.canSaveExercise(),
             isLoading = state.isLoading,
             text = stringResource(Res.string.save_exercise),
-            onClick = { listener.onSaveClicked() }
+            onClick = {
+                focusManager.clearFocus()
+                listener.onSaveClicked()
+            }
         )
     }
 

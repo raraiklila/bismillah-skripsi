@@ -149,7 +149,8 @@ actual object PdfReportManager {
                 val muscleName = muscles.getOrNull(i)?.toString() ?: "Muscle ${i + 1}"
                 val pct = (percents.getOrNull(i) ?: 0f) * 100f
                 val pctInt = pct.toInt()
-                canvas.drawText("- ${muscleName.capitalize(Locale.ROOT)}: $pctInt%", 60f, y, paint)
+                val formattedName = muscleName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+                canvas.drawText("- $formattedName: $pctInt%", 60f, y, paint)
                 y += 18f
                 if (y > pageInfo.pageHeight - 80) {
                     document.finishPage(page)

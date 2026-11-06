@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.appbar.ActionIconButton
 import com.cairosquad.evolvefit.design_system.component.appbar.CustomAppBar
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.meal_details.MealDetailsScreenState
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.back
@@ -60,7 +61,7 @@ fun MealDetailsAppBar(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .clickable(onClick = onBookmarkClick)
+                    .bouncyClickable(onClick = onBookmarkClick)
                     .padding(8.dp)
             )
         }

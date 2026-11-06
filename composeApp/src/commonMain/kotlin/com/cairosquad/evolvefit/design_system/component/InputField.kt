@@ -29,11 +29,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.util.noRippleClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.characters_left
@@ -65,6 +68,7 @@ fun InputField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    label: String? = null,
     placeholder: String = "",
     error: String = "",
     readOnly: Boolean = false,
@@ -80,8 +84,8 @@ fun InputField(
     onTrailingIconClick: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onClick: (() -> Unit)? = null,
-    verticalPadding: Dp = 20.dp,
-    horizontalPadding: Dp = 12.dp,
+    verticalPadding: Dp = Theme.spacing.space200,
+    horizontalPadding: Dp = Theme.spacing.space150,
     isError: Boolean = false,
     textColor: Color = Theme.color.surfaces.onSurfaceContainer,
 ) {
@@ -108,17 +112,10 @@ fun InputField(
                 }
             )
     ) {
-        BasicTextField(
+        androidx.compose.material3.OutlinedTextField(
             modifier = Modifier
-                .heightIn(min = minHeight)
-                .border(
-                    width = 1.dp,
-                    color = if (isError) Theme.color.system.error else Color.Transparent,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clip(RoundedCornerShape(8.dp))
-                .background(Theme.color.surfaces.surfaceContainer)
-                .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+                .fillMaxWidth()
+                .heightIn(min = minHeight),
             value = textFieldValue,
             onValueChange = { newValue ->
                 val filteredValue =
@@ -136,105 +133,84 @@ fun InputField(
                 onValueChange(filteredValue.text)
             },
             readOnly = readOnly,
-            textStyle = Theme.textStyle.label.smallRegular14.copy(
-                color = textColor
-            ),
-            keyboardOptions = keyboardOptions,
-            singleLine = isSingleLine,
-            decorationBox = { innerTextField ->
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TextFieldIcon(
-                            leadingIcon,
-                            error = error.isNotBlank(),
-                            modifier = Modifier
-                                .then(
-                                    if (onClick != null) {
-                                        Modifier.noRippleClickable(onClick)
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .padding(end = 8.dp)
-                        )
-                        if (onClick != null) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .noRippleClickable(onClick)
-                            ) {
-                                innerTextField()
-
-                                if (textFieldValue.text.isEmpty()) {
-                                    Text(
-                                        text = placeholder,
-                                        style = Theme.textStyle.label.smallRegular14.copy(
-                                            color = Theme.color.surfaces.onSurfaceVariant
-                                        )
-                                    )
-                                }
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                innerTextField()
-
-                                if (textFieldValue.text.isEmpty()) {
-                                    Text(
-                                        text = placeholder,
-                                        style = Theme.textStyle.label.smallRegular14.copy(
-                                            color = Theme.color.surfaces.onSurfaceVariant
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                        TextFieldIcon(
-                            trailingIcon,
-                            modifier = trailingIconModifier
-                                .then(
-                                    if (onClick != null) {
-                                        Modifier.noRippleClickable(onClick)
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .padding(start = 8.dp),
-                            error = error.isNotBlank(),
-                            onTrailingIconClick,
-                        )
-                    }
-                    if (isCharacterCountVisible && maxCharacters != null) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        val remaining = maxCharacters - textFieldValue.text.length
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp, end = 8.dp),
-                            text = stringResource(Res.string.characters_left, remaining),
-                            style = Theme.textStyle.label.smallRegular12,
-                            color = Theme.color.surfaces.onSurfaceVariant,
-                            textAlign = TextAlign.End
-                        )
-                    }
+            label = label?.takeIf { it.isNotBlank() }?.let {
+                {
+                    Text(
+                        text = it,
+                        style = Theme.textStyle.label.smallRegular12
+                    )
                 }
             },
-            cursorBrush = SolidColor(
-                Theme.color.surfaces.onSurface
-            ),
+            placeholder = placeholder.takeIf { it.isNotBlank() }?.let {
+                {
+                    Text(
+                        text = it,
+                        style = Theme.textStyle.label.smallRegular14,
+                        color = Theme.color.surfaces.onSurfaceVariant
+                    )
+                }
+            },
+            leadingIcon = leadingIcon?.let { icon ->
+                {
+                    TextFieldIcon(
+                        icon = icon,
+                        error = error.isNotBlank(),
+                        onClick = onClick
+                    )
+                }
+            },
+            trailingIcon = trailingIcon?.let { icon ->
+                {
+                    TextFieldIcon(
+                        icon = icon,
+                        modifier = trailingIconModifier,
+                        error = error.isNotBlank(),
+                        onClick = onTrailingIconClick ?: onClick
+                    )
+                }
+            },
+            isError = isError || error.isNotBlank(),
             visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = keyboardOptions,
+            singleLine = isSingleLine,
+            shape = Theme.shapes.inputShape,
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Theme.color.brand.primary,
+                unfocusedBorderColor = Theme.color.surfaces.outlineVariant,
+                errorBorderColor = Theme.color.system.error,
+                focusedContainerColor = Theme.color.surfaces.surfaceContainer,
+                unfocusedContainerColor = Theme.color.surfaces.surfaceContainer,
+                disabledContainerColor = Theme.color.surfaces.surfaceContainer,
+                focusedLabelColor = Theme.color.brand.primary,
+                unfocusedLabelColor = Theme.color.surfaces.onSurfaceVariant,
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                focusedLeadingIconColor = Theme.color.brand.primary,
+                unfocusedLeadingIconColor = Theme.color.surfaces.onSurfaceVariant,
+                focusedTrailingIconColor = Theme.color.brand.primary,
+                unfocusedTrailingIconColor = Theme.color.surfaces.onSurfaceVariant,
+            ),
+            textStyle = Theme.textStyle.label.smallRegular14.copy(color = textColor)
         )
+        if (isCharacterCountVisible && maxCharacters != null) {
+            val remaining = maxCharacters - textFieldValue.text.length
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, end = 8.dp),
+                text = stringResource(Res.string.characters_left, remaining),
+                style = Theme.textStyle.label.smallRegular12,
+                color = Theme.color.surfaces.onSurfaceVariant,
+                textAlign = TextAlign.End
+            )
+        }
         if (error.isNotBlank() && isErrorMessageShown) {
             Row(
                 modifier = Modifier.padding(top = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    modifier = Modifier.size(16.dp).padding(end=4.dp),
+                    modifier = Modifier.size(16.dp).padding(end = 4.dp),
                     painter = painterResource(Res.drawable.ic_error),
                     contentDescription = "error",
                     tint = Theme.color.system.error
@@ -245,7 +221,6 @@ fun InputField(
                     style = Theme.textStyle.label.smallRegular12,
                 )
             }
-
         }
     }
 }
@@ -274,7 +249,7 @@ private fun TextFieldIcon(
                         if (onClick != null) {
                             Modifier
                                 .clip(CircleShape)
-                                .clickable(onClick = onClick)
+                                .bouncyClickable(onClick = onClick)
                         } else {
                             Modifier
                         }

@@ -40,7 +40,6 @@ private fun formatDayName(date: LocalDate, locale: String): String {
             DayOfWeek.FRIDAY -> "الجمعة"
             DayOfWeek.SATURDAY -> "السبت"
             DayOfWeek.SUNDAY -> "الأحد"
-            else -> "?"
         }
     } else {
         date.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }

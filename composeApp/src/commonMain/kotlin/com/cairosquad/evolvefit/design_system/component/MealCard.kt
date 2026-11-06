@@ -52,17 +52,17 @@ fun MealCard(
             NetworkImage(
                 modifier = Modifier
                     .matchParentSize()
-                    .clip(RoundedCornerShape(8.dp)),
+                    .clip(Theme.shapes.cardSmallShape),
                 model = model,
                 contentDescription = stringResource(Res.string.meal_image),
             )
             Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(end = 4.dp, top = 4.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                    .padding(end = 6.dp, top = 6.dp)
+                    .clip(Theme.shapes.full)
                     .background(Theme.color.brand.onPrimary)
-                    .padding(vertical = 4.dp, horizontal = 8.dp),
+                    .padding(vertical = 4.dp, horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import kotlin.math.PI
 import kotlin.math.sin
@@ -22,8 +23,8 @@ fun RisingWaveAnimation(
     modifier: Modifier = Modifier,
     fillPercent: Float,
     isAnimationStarted: Boolean,
-    durationMillis: Int = 1200,
-    easing: Easing = LinearEasing
+    durationMillis: Int? = null,
+    easing: Easing? = null
 ) {
     val amplitude1 = 45f
     val amplitude2 = 30f
@@ -33,15 +34,22 @@ fun RisingWaveAnimation(
 
     val finalPhase = 25f
 
+    val animSpec = if (durationMillis != null && easing != null) {
+        tween<Float>(durationMillis = durationMillis, easing = easing)
+    } else if (isAnimationStarted) {
+        tween<Float>(durationMillis = 850, easing = AppMotion.EmphasizedDecelerate)
+    } else {
+        tween<Float>(durationMillis = 180, easing = AppMotion.EmphasizedAccelerate)
+    }
 
     val animatedFillValue by animateFloatAsState(
         targetValue = if (isAnimationStarted) fillPercent else 0f,
-        animationSpec = tween(durationMillis = durationMillis, easing = easing),
+        animationSpec = animSpec,
         label = "fillAnimation"
     )
     val animatedPhaseValue by animateFloatAsState(
         targetValue = if (isAnimationStarted) finalPhase else 0f,
-        animationSpec = tween(durationMillis = durationMillis, easing = easing),
+        animationSpec = animSpec,
         label = "phaseAnimation"
     )
 

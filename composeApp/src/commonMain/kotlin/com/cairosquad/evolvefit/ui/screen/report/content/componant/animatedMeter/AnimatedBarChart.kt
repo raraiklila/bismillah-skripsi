@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.ui.screen.report.content.componant.animatedMeter.chartComponent.Tooltip
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -34,8 +35,9 @@ fun AnimatedBarChart(
     focusedBarColor: Color,
     unfocusedBarColor: Color,
     isAnimationStarted: Boolean,
-    animationDuration: Int = 1200,
-    animationEasing: Easing = LinearEasing,
+    animationDuration: Int = 1000,
+    animationEasing: Easing = AppMotion.EmphasizedEasing,
+    modifier: Modifier = Modifier,
     onBarCentersCalculated: (List<Float>) -> Unit = {}
 ) {
     val maxValue = (data.maxOrNull() ?: 0f).coerceAtLeast(1f)
@@ -44,9 +46,9 @@ fun AnimatedBarChart(
     val animatedHeights = data.map { value ->
         animateFloatAsState(
             targetValue = if (isAnimationStarted) value / maxValue else 0f,
-            animationSpec = tween(
-                durationMillis = animationDuration,
-                easing = animationEasing
+            animationSpec = androidx.compose.animation.core.spring(
+                dampingRatio = androidx.compose.animation.core.Spring.DampingRatioMediumBouncy,
+                stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow
             ),
             label = "barHeightAnim"
         ).value
@@ -58,7 +60,7 @@ fun AnimatedBarChart(
     val barRects = remember { mutableStateListOf<androidx.compose.ui.geometry.Rect>() }
 
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .height(144.dp)
             .fillMaxWidth()
     ) {
@@ -101,25 +103,26 @@ fun AnimatedBarChart(
                     bottom = bottomY
                 ))
 
-                if (barHeight != 0f) {
-                    val path = Path().apply {
-                        val left = barX
-                        val top = maxHeight - barHeight
-                        val right = barX + barWidthPx
-                        val bottom = maxHeight
-                        val radius = 16f
+                // 1. Material 3 Expressive Background Track Capsule (Shows full capacity scale)
+                val trackRadius = androidx.compose.ui.geometry.CornerRadius(barWidthPx / 2f, barWidthPx / 2f)
+                drawRoundRect(
+                    color = unfocusedBarColor.copy(alpha = 0.25f),
+                    topLeft = Offset(barX, 0f),
+                    size = androidx.compose.ui.geometry.Size(barWidthPx, maxHeight),
+                    cornerRadius = trackRadius
+                )
 
-                        moveTo(left, bottom)
-                        lineTo(left, top + radius)
-                        quadraticTo(left, top, left + radius, top)
-                        lineTo(right - radius, top)
-                        quadraticTo(right, top, right, top + radius)
-                        lineTo(right, bottom)
-                        close()
-                    }
-                    drawPath(
-                        path = path,
-                        color = if (isMax) focusedBarColor else unfocusedBarColor
+                // 2. Material 3 Expressive Active Bar Capsule (Full Stadium / Pill Shape)
+                if (barHeight > 0f) {
+                    val activeBarRadius = androidx.compose.ui.geometry.CornerRadius(
+                        barWidthPx / 2f,
+                        (barWidthPx / 2f).coerceAtMost(barHeight / 2f)
+                    )
+                    drawRoundRect(
+                        color = if (isMax) focusedBarColor else unfocusedBarColor,
+                        topLeft = Offset(barX, topY),
+                        size = androidx.compose.ui.geometry.Size(barWidthPx, barHeight),
+                        cornerRadius = activeBarRadius
                     )
                 }
             }

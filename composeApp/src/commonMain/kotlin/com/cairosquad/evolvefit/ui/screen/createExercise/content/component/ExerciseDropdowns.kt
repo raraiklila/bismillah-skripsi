@@ -70,6 +70,7 @@ fun EquipmentDropdownRow(
                 items = state.equipmentNames,
                 onItemSelected = listener::onEquipmentNameSelected,
                 isChecked = state::isEquipmentSelected,
+                isSingleChoice = true,
                 labelProvider = { it }
             )
             Spacer(modifier = Modifier.height(8.dp))

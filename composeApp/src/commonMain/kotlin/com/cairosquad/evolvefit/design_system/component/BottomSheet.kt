@@ -18,8 +18,8 @@ fun BottomSheet(
     isVisible: Boolean,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = Theme.color.surfaces.surface,
-    scrimColor: Color = Theme.color.surfaces.onSurfaceAt2,
+    containerColor: Color = Theme.color.surfaces.surfaceContainer,
+    scrimColor: Color = Color.Black.copy(alpha = 0.65f),
     content: @Composable ColumnScope.() -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
@@ -38,12 +38,19 @@ fun BottomSheet(
 
     if (isBottomSheetVisible) {
         ModalBottomSheet(
-            modifier = modifier.padding(8.dp),
+            modifier = modifier,
             onDismissRequest = onDismiss,
             sheetState = sheetState,
             containerColor = containerColor,
             scrimColor = scrimColor,
-            shape = RoundedCornerShape(24.dp)
+            shape = Theme.shapes.sheetShape,
+            dragHandle = {
+                androidx.compose.material3.BottomSheetDefaults.DragHandle(
+                    color = Theme.color.surfaces.outlineVariant,
+                    width = 48.dp,
+                    height = 5.dp
+                )
+            }
         ) {
             content()
         }

@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -38,8 +39,10 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.onboarding.models.UiImage
 import com.cairosquad.evolvefit.viewmodel.register.RegisterInteractionListener
 import com.cairosquad.evolvefit.viewmodel.register.RegisterScreenState
@@ -210,11 +213,17 @@ fun MeasurementCard(
 ) {
     Row(
         modifier = modifier
+            .clip(Theme.shapes.large)
             .background(
-                Theme.color.surfaces.surfaceContainer,
-                RoundedCornerShape(8.dp)
+                color = Theme.color.surfaces.surfaceContainer,
+                shape = Theme.shapes.large
             )
-            .width(116.dp)
+            .bouncyClickable(
+                pressedScale = 0.95f,
+                springSpec = AppMotion.SpringTokens.defaultSpatial(),
+                onClick = {}
+            )
+            .width(124.dp)
             .height(48.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
@@ -222,14 +231,13 @@ fun MeasurementCard(
         Icon(
             painter = measureIcon,
             contentDescription = null,
-            tint = Theme.color.surfaces.onSurfaceVariant,
-            modifier = Modifier
-                .size(20.dp)
+            tint = Theme.color.brand.primary,
+            modifier = Modifier.size(20.dp)
         )
         BasicText(
             text = formatToOneDecimal(selectedMeasure) + " " + measureUnit,
             style = Theme.textStyle.label.smallRegular14.copy(
-                color = Theme.color.surfaces.onSurfaceVariant
+                color = Theme.color.surfaces.onSurface
             )
         )
     }

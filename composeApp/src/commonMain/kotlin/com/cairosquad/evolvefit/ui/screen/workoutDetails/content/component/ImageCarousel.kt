@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.exercise_image
@@ -53,7 +54,7 @@ fun ImageCarousel(
         NetworkImage(
             model = images.getOrNull(currentIndex) ?: "",
             contentDescription = stringResource(Res.string.exercise_image),
-            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp)),
+            modifier = Modifier.fillMaxSize().clip(Theme.shapes.cardShape),
         )
         if (images.size > 1) {
             val (leftIcon, leftAction, leftEnabled) = if (layoutDirection == LayoutDirection.Ltr) {
@@ -81,7 +82,7 @@ fun ImageCarousel(
                     .size(32.dp)
                     .padding(8.dp)
                     .clip(CircleShape)
-                    .then(if (leftEnabled) Modifier.clickable { leftAction() } else Modifier)
+                    .bouncyClickable(enabled = leftEnabled, onClick = leftAction)
             )
 
             val (rightIcon, rightAction, rightEnabled) = if (layoutDirection == LayoutDirection.Ltr) {
@@ -109,7 +110,7 @@ fun ImageCarousel(
                     .size(32.dp)
                     .padding(8.dp)
                     .clip(CircleShape)
-                    .then(if (rightEnabled) Modifier.clickable { rightAction() } else Modifier)
+                    .bouncyClickable(enabled = rightEnabled, onClick = rightAction)
             )
         }
         MeasurementRow(
@@ -117,7 +118,7 @@ fun ImageCarousel(
             specificationIcon = specificationIcon,
             modifier = Modifier
                 .align(Alignment.BottomEnd).padding(bottom = 8.dp, end = 8.dp)
-                .background(Theme.color.surfaces.onSurfaceAt2, RoundedCornerShape(24.dp))
+                .background(Theme.color.surfaces.onSurfaceAt2, Theme.shapes.chipShape)
                 .padding(vertical = 8.dp, horizontal = 12.dp),
             iconTint = Theme.color.surfaces.textColor,
             textColor = Theme.color.surfaces.textColor,

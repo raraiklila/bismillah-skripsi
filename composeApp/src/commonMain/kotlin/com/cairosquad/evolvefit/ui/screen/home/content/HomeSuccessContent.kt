@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.WorkoutCard
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import com.cairosquad.evolvefit.domain.entity.Profile
 import com.cairosquad.evolvefit.ui.component.CaloriesNutritionCard
@@ -40,14 +41,17 @@ import com.cairosquad.evolvefit.ui.screen.home.content.component.SaveButton
 
 import com.cairosquad.evolvefit.viewmodel.home.HomeInteractionListener
 import com.cairosquad.evolvefit.viewmodel.home.HomeScreenState
+import androidx.compose.foundation.Image
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.hello_user
+import evolvefit.composeapp.generated.resources.im_default_profile
 import evolvefit.composeapp.generated.resources.just_for_you
 import evolvefit.composeapp.generated.resources.profile_picture
 import evolvefit.composeapp.generated.resources.ready_text_female
 import evolvefit.composeapp.generated.resources.ready_text_male
 import evolvefit.composeapp.generated.resources.today_nutrition
 import evolvefit.composeapp.generated.resources.workout_duration
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -157,7 +161,7 @@ private fun PersonalizedWorkouts(
                 modifier = Modifier
                     .width(268.dp)
                     .height(172.dp)
-                    .clickable(onClick = { onWorkoutClick(workout.id) })
+                    .bouncyClickable(onClick = { onWorkoutClick(workout.id) })
             ) {
                 WorkoutCard(
                     title = workout.name,
@@ -201,15 +205,28 @@ private fun HomeUserHeader(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NetworkImage(
-                model = user?.profilePictureUrl ?: "",
-                contentDescription = stringResource(Res.string.profile_picture),
-                contentScale = ContentScale.Crop,
-                placeholderImageSize = DpSize(40.dp, 40.dp),
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(40.dp)
-            )
+            if (!user?.profilePictureUrl.isNullOrBlank()) {
+                NetworkImage(
+                    model = user?.profilePictureUrl ?: "",
+                    contentDescription = stringResource(Res.string.profile_picture),
+                    contentScale = ContentScale.Crop,
+                    placeholderImageSize = DpSize(40.dp, 40.dp),
+                    defaultImage = painterResource(Res.drawable.im_default_profile),
+                    loadingPlaceHolder = painterResource(Res.drawable.im_default_profile),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(40.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.im_default_profile),
+                    contentDescription = stringResource(Res.string.profile_picture),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(40.dp)
+                )
+            }
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp)

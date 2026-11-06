@@ -19,6 +19,7 @@ import com.cairosquad.evolvefit.ui.screen.nutrition.content.component.MealTypeDr
 import com.cairosquad.evolvefit.ui.screen.nutrition.content.component.NutritionHeader
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionInteractionListener
 import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionScreenState
+import com.cairosquad.evolvefit.viewmodel.nutrition.NutritionViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -26,6 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 fun NutritionContent(
     state: NutritionScreenState,
     listener: NutritionInteractionListener,
+    viewModel: NutritionViewModel,
 ) {
     RefreshBox(
         isRefreshing = state.isRefreshing,
@@ -46,7 +48,7 @@ fun NutritionContent(
             ) {
                 when (state.screenStatus) {
                     NutritionScreenState.ScreenStatus.SUCCESS -> {
-                        NutritionSuccessScreen(state, listener)
+                        NutritionSuccessScreen(state, listener, viewModel)
                     }
 
                     NutritionScreenState.ScreenStatus.LOADING -> {

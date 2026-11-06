@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
+import com.cairosquad.evolvefit.design_system.component.SecondaryButton
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import evolvefit.composeapp.generated.resources.Res
+import evolvefit.composeapp.generated.resources.cancel
 import evolvefit.composeapp.generated.resources.confirm_logout
 import evolvefit.composeapp.generated.resources.icon_login
 import evolvefit.composeapp.generated.resources.logo
@@ -25,6 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun LogoutBottomSheetContent(
     onLogout: () -> Unit,
+    onCancel: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
@@ -50,10 +53,19 @@ fun LogoutBottomSheetContent(
         PrimaryButton(
             text = stringResource(Res.string.logout),
             onClick = onLogout,
-            modifier = Modifier.padding(bottom = 16.dp),
+            modifier = Modifier.fillMaxWidth(),
             isEnabled = true,
             enabledTextColor = Theme.color.brand.onPrimary,
             textStyle = Theme.textStyle.body.mediumMedium14,
+        )
+        SecondaryButton(
+            text = stringResource(Res.string.cancel),
+            onClick = onCancel,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+                .padding(bottom = 16.dp),
+            isEnabled = true,
         )
     }
 }

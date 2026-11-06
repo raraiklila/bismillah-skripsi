@@ -97,7 +97,7 @@ private fun WorkoutCard(
         modifier = modifier
             .height(172.dp)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(Theme.shapes.cardShape)
             .background(Theme.color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {

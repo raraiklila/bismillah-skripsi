@@ -15,6 +15,14 @@ data class Brand(
     val onPrimary: Color,
     val primaryContainer: Color,
     val onPrimaryContainer: Color,
+    val secondary: Color = Color.Unspecified,
+    val onSecondary: Color = Color.Unspecified,
+    val secondaryContainer: Color = Color.Unspecified,
+    val onSecondaryContainer: Color = Color.Unspecified,
+    val tertiary: Color = Color.Unspecified,
+    val onTertiary: Color = Color.Unspecified,
+    val tertiaryContainer: Color = Color.Unspecified,
+    val onTertiaryContainer: Color = Color.Unspecified,
 )
 
 data class Surfaces(
@@ -32,6 +40,7 @@ data class Surfaces(
     val onSurfaceAt3: Color,
     val onSurfaceAt4: Color,
     val dropShadow: Color,
+    val surfaceContainerHighest: Color = Color.Unspecified,
 )
 
 data class System(

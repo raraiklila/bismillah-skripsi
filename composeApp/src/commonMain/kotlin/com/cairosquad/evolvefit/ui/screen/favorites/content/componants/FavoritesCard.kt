@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.ic_save_full
@@ -47,8 +48,8 @@ fun FavoritesCard(
         modifier = modifier
             .fillMaxWidth()
             .height(172.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onCardClick)
+            .clip(Theme.shapes.cardShape)
+            .bouncyClickable(onClick = onCardClick)
     ) {
         NetworkImage(
             modifier = Modifier.fillMaxSize(),
@@ -59,7 +60,7 @@ fun FavoritesCard(
         Box(
             modifier = Modifier.fillMaxSize()
                 .background(Theme.color.surfaces.onSurfaceAt3)
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(Theme.shapes.cardShape),
         )
         Box(
             modifier = Modifier
@@ -67,7 +68,7 @@ fun FavoritesCard(
                 .clip(CircleShape)
                 .align(Alignment.TopEnd)
                 .background(Theme.color.surfaces.onSurfaceAt3)
-                .clickable(onClick = onSaveIconClick),
+                .bouncyClickable(onClick = onSaveIconClick),
             contentAlignment = Alignment.Center
         ) {
             Icon(

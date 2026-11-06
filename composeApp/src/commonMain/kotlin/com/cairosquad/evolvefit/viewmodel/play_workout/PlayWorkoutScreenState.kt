@@ -12,6 +12,7 @@ data class PlayWorkoutScreenState(
     val workout: WorkoutUiState = WorkoutUiState(),
     val currentStep: Int = 1,
     val totalTimeMinutes: Int = 0,
+    val totalTimeSeconds: Int = 0,
     val haseCancelWorkoutClicked: Boolean = false,
     val showExerciseInfo: Boolean = false,
 ) {

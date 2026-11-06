@@ -19,6 +19,18 @@ fun localDateTimeToLocalDate(dateTime: LocalDateTime): LocalDate {
     return dateTime.date
 }
 fun parseIsoDateStringToLocalDateTime(isoDateString: String): LocalDateTime {
-    val localDate = LocalDate.parse(isoDateString)
-    return localDate.atTime(LocalTime(0, 0, 0))
+    return try {
+        if (isoDateString.contains("T")) {
+            LocalDateTime.parse(isoDateString.substringBefore("Z"))
+        } else {
+            LocalDate.parse(isoDateString).atTime(LocalTime(0, 0, 0))
+        }
+    } catch (e: Exception) {
+        try {
+            val datePart = isoDateString.substringBefore("T")
+            LocalDate.parse(datePart).atTime(LocalTime(0, 0, 0))
+        } catch (e2: Exception) {
+            LocalDate(2026, 1, 1).atTime(LocalTime(0, 0, 0))
+        }
+    }
 }

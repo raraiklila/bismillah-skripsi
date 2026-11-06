@@ -11,6 +11,7 @@ import org.jetbrains.compose.resources.StringResource
 
 
 data class WorkoutScreenState(
+    val searchQuery: String = "",
     val selectedFocusArea: FocusAreaUiState = FocusAreaUiState.ALL,
     val allWorkouts: List<WorkoutSuggestedUiState> = emptyList(),
     val focusAreas: List<FocusAreaUiState> = FocusAreaUiState.entries,
@@ -19,6 +20,15 @@ data class WorkoutScreenState(
     val isItemsLoading: Boolean = false,
     val errorMessage: StringResource? = null
 ) {
+    val filteredWorkouts: List<WorkoutSuggestedUiState>
+        get() = if (searchQuery.isBlank()) {
+            allWorkouts
+        } else {
+            allWorkouts.filter {
+                it.title.contains(searchQuery.trim(), ignoreCase = true)
+            }
+        }
+
     data class WorkoutSuggestedUiState(
         val id: String,
         val title: String,

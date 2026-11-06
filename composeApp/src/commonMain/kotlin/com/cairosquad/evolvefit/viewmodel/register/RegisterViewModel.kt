@@ -278,8 +278,8 @@ class RegisterViewModel(
             3 -> true
             4 -> state.selectedGoal != null
             5 -> state.isNoEquipmentSelected || state.selectedEquipments.isNotEmpty()
-            6 -> true
-            7 -> state.selectedWeekDayUiState.isNotEmpty()
+            6 -> state.selectedWeekDayUiState.isNotEmpty()
+            7 -> isCredentialsValid()
             else -> isCredentialsValid()
         }
         updateState { it.copy(isNextButtonEnabled = isNextButtonEnabled) }
@@ -291,6 +291,7 @@ class RegisterViewModel(
                 && state.userEmailInput.isNotEmpty()
                 && state.userPasswordInput.isNotEmpty()
                 && state.dateOfBirthInput.isNotEmpty()
+                && state.image is UiImage.ImageFile
     }
 
     private fun handleRegisterError(error: Throwable) {

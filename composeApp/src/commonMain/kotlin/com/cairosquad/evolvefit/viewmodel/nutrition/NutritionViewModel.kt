@@ -205,7 +205,7 @@ class NutritionViewModel(
     override fun onConfirmAddWaterClicked(waterAmount: String) {
         val consumedWaterInput = screenState.value.consumedWaterInput.trim()
         val remaining = screenState.value.dailyWaterGoal - screenState.value.todayConsumedWater
-        val input = consumedWaterInput.toIntOrNull() ?: 0
+        val input = consumedWaterInput.toFloatOrNull() ?: 0f
 
         if (input > remaining) {
             showSnackBar(
@@ -225,16 +225,26 @@ class NutritionViewModel(
 
     private fun onAddWaterSuccess(isAdded: Boolean) {
         if (isAdded) {
+            val state = screenState.value
+            val addedAmount = state.consumedWaterInput.trim().toFloatOrNull() ?: 0f
+            val newConsumed = state.todayConsumedWater + addedAmount
+            val goal = state.dailyWaterGoal
+            val isGoalReached = goal > 0f && newConsumed >= (goal - 0.05f)
+
             loadDailyWaterSummary()
             updateState {
                 it.copy(
                     isAddWaterSheetVisible = false,
                     isAddButtonEnabled = false,
                     consumedWaterInput = "",
-                    waterInputError = null
+                    waterInputError = null,
+                    todayConsumedWater = newConsumed,
+                    isCongratsWaterVisible = isGoalReached
                 )
             }
-            showSnackBar(Res.string.water_added_successfully, Res.drawable.ic_green_check_circle)
+            if (!isGoalReached) {
+                showSnackBar(Res.string.water_added_successfully, Res.drawable.ic_green_check_circle)
+            }
         } else {
             showSnackBar(Res.string.error_unknown, Res.drawable.ic_info)
         }
@@ -304,21 +314,43 @@ class NutritionViewModel(
         if (isAdded) {
             loadConsumedMealsForToday()
             loadDailyCaloriesSummary()
-            showSnackBar(
-                Res.string.meal_added_snackbar,
-                Res.drawable.ic_green_check_circle
-            )
-            updateState {
-                it.copy(
-                    isAddMealSheetVisible = false,
-                    isInitialLoad = true,
-                    isAddButtonEnabled = false,
-                    consumedCaloriesInput = "",
-                    mealNameInput = "",
-                    selectedMeal = NutritionScreenState.MealTypeUiState.Breakfast,
-                    mealCaloriesInputError = null,
-                    mealNameInputError = null
+            val state = screenState.value
+            val addedCalories = state.consumedCaloriesInput.toFloatOrNull() ?: 0f
+            val newCalories = state.todayConsumedCalories + addedCalories
+            val goal = state.dailyCaloriesGoal
+            if (goal > 0 && newCalories >= (goal - 0.5f)) {
+                updateState {
+                    it.copy(
+                        todayConsumedCalories = newCalories,
+                        isAddMealSheetVisible = false,
+                        isInitialLoad = true,
+                        isAddButtonEnabled = false,
+                        consumedCaloriesInput = "",
+                        mealNameInput = "",
+                        selectedMeal = NutritionScreenState.MealTypeUiState.Breakfast,
+                        mealCaloriesInputError = null,
+                        mealNameInputError = null,
+                        isCongratsCaloriesVisible = true
+                    )
+                }
+            } else {
+                showSnackBar(
+                    Res.string.meal_added_snackbar,
+                    Res.drawable.ic_green_check_circle
                 )
+                updateState {
+                    it.copy(
+                        todayConsumedCalories = newCalories,
+                        isAddMealSheetVisible = false,
+                        isInitialLoad = true,
+                        isAddButtonEnabled = false,
+                        consumedCaloriesInput = "",
+                        mealNameInput = "",
+                        selectedMeal = NutritionScreenState.MealTypeUiState.Breakfast,
+                        mealCaloriesInputError = null,
+                        mealNameInputError = null
+                    )
+                }
             }
         } else {
             showSnackBar(
@@ -419,6 +451,14 @@ class NutritionViewModel(
 
     override fun onDismissWaterClicked() {
         updateState { it.copy(isAddWaterSheetVisible = false, waterInputError = null, consumedWaterInput = "") }
+    }
+
+    fun onDismissCongratsCalories() {
+        updateState { it.copy(isCongratsCaloriesVisible = false) }
+    }
+
+    fun onDismissCongratsWater() {
+        updateState { it.copy(isCongratsWaterVisible = false) }
     }
 
     override fun onRefresh() {

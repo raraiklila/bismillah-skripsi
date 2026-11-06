@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.do_not_have_an_account
 import evolvefit.composeapp.generated.resources.join_now
@@ -31,7 +32,7 @@ fun SignUpPromptRow(
             color = Theme.color.surfaces.onSurfaceContainer,
         )
         Text(
-            modifier = Modifier.clickable(onClick = onJoinNowClicked),
+            modifier = Modifier.bouncyClickable(onClick = onJoinNowClicked),
             text = stringResource(Res.string.join_now),
             style = Theme.textStyle.label.mediumMedium16,
             color = Theme.color.brand.primary,

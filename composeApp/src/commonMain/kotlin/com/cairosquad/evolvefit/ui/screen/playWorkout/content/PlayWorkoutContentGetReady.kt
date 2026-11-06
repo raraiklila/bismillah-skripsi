@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.CircularTimer
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.ColumnWithBackgroundImage
 import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.ExerciseNameAndInfoIcon
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutInteractionListener
@@ -61,7 +62,7 @@ fun PlayWorkoutContentGetReady(
                 .padding(start = 16.dp)
                 .size(48.dp)
                 .clip(CircleShape)
-                .clickable(onClick = listener::onCancelWorkoutClicked)
+                .bouncyClickable(onClick = listener::onCancelWorkoutClicked)
                 .padding(12.dp),
             painter = painterResource(Res.drawable.ic_cross),
             contentDescription = stringResource(Res.string.cancel_workout),

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.exercise_info
 import evolvefit.composeapp.generated.resources.ic_question_mark
@@ -47,9 +48,7 @@ fun ExerciseNameAndInfoIcon(
             modifier = Modifier
                 .size(iconSize)
                 .clip(CircleShape)
-                .clickable(
-                    onClick = onClickInfo
-                ),
+                .bouncyClickable(onClick = onClickInfo),
             painter = painterResource(Res.drawable.ic_question_mark),
             contentDescription = stringResource(Res.string.exercise_info),
             tint = Theme.color.surfaces.onSurfaceVariant,

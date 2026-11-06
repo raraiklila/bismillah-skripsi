@@ -20,5 +20,5 @@ interface WorkoutRemoteDataSource {
     suspend fun getWorkoutHistory(): List<WorkoutHistoryDto>
     suspend fun addFavoriteWorkout(workOutId : String)
     suspend fun deleteFavoriteWorkout(workoutId : String)
-    suspend fun uploadWorkoutImage(fileBytes: ByteArray, fileName: String, exerciseId : String): String
+    suspend fun uploadWorkoutImage(fileBytes: ByteArray, fileName: String, workoutId: String): String
 }

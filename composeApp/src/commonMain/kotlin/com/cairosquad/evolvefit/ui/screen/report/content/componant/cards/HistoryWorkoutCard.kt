@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.report.ReportScreenState
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.view_all
@@ -52,7 +53,7 @@ fun HistoryWorkoutCard(
         Box(
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(onClick = onViewAllHistoryClicked)
+                .bouncyClickable(onClick = onViewAllHistoryClicked)
                 .padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
             Text(

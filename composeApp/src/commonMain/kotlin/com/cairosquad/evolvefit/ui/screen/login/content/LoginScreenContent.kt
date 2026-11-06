@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +24,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
 import com.cairosquad.evolvefit.design_system.component.appbar.ActionIconButton
@@ -56,6 +60,7 @@ fun LoginScreenContent(
     listener: LoginInteractionListener,
     showBackButton: Boolean
 ) {
+    val focusManager = LocalFocusManager.current
     val visibilityIcon = if (state.isPasswordVisible) {
         Res.drawable.ic_visibility_on
     } else {
@@ -66,7 +71,9 @@ fun LoginScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.systemBars)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding()
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -175,7 +182,10 @@ fun LoginScreenContent(
                     text = stringResource(Res.string.login),
                     isEnabled = state.canSubmit,
                     isLoading = state.isLoading,
-                    onClick = listener::onLoginClicked
+                    onClick = {
+                        focusManager.clearFocus()
+                        listener.onLoginClicked()
+                    }
                 )
             }
 

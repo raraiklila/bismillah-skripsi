@@ -54,7 +54,7 @@ fun LoadingHistoryWorkoutCard() {
         Column(
             modifier = Modifier.background(
                 Theme.color.surfaces.surfaceContainer,
-                shape = RoundedCornerShape(8.dp)
+                shape = Theme.shapes.cardSmallShape
             ).padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -65,7 +65,7 @@ fun LoadingHistoryWorkoutCard() {
                 Box(
                     modifier = Modifier
                         .size(width = 68.dp, height = 52.dp)
-                        .clip(RoundedCornerShape(4.dp))
+                        .clip(Theme.shapes.medium)
                         .background(Theme.color.surfaces.surfaceVariant)
                 )
                 BasicDetailsLoading()
@@ -79,7 +79,7 @@ fun LoadingHistoryWorkoutCard() {
         Box(
             modifier = Modifier.height(123.dp)
                 .fillMaxWidth()
-                .background(brush, RoundedCornerShape(8.dp))
+                .background(brush, Theme.shapes.cardSmallShape)
         )
     }
 }

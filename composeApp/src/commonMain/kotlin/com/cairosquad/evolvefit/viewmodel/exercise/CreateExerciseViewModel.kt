@@ -74,11 +74,24 @@ class CreateExerciseViewModel(
 
     override fun onMeasurementTypeSelected(type: MeasurementType) {
         updateState {
-            it.copy(
-                measurementType = type,
-                isDurationChecked = type == MeasurementType.DURATION,
-                isRepsChecked = type == MeasurementType.REPS
-            )
+            val isCurrentTypeChecked = when (type) {
+                MeasurementType.DURATION -> it.isDurationChecked
+                MeasurementType.REPS -> it.isRepsChecked
+            }
+            if (isCurrentTypeChecked) {
+                it.copy(
+                    isDurationChecked = false,
+                    isRepsChecked = false,
+                    measurementInputValue = ""
+                )
+            } else {
+                it.copy(
+                    measurementType = type,
+                    isDurationChecked = type == MeasurementType.DURATION,
+                    isRepsChecked = type == MeasurementType.REPS,
+                    measurementInputValue = ""
+                )
+            }
         }
     }
 
@@ -143,10 +156,11 @@ class CreateExerciseViewModel(
     override fun canSaveExercise(): Boolean {
         val currentState = screenState.value
         return currentState.name.isNotBlank() &&
-                currentState.frontImage != null &&
+                currentState.frontImage is UiImage.ImageFile &&
                 currentState.selectedFocusAreas.isNotEmpty() &&
                 currentState.selectedEquipment.name.isNotBlank() &&
                 (currentState.isDurationChecked || currentState.isRepsChecked) &&
+                currentState.measurementInputValue.isNotBlank() &&
                 currentState.description.isNotBlank()
     }
 
@@ -175,7 +189,8 @@ class CreateExerciseViewModel(
     }
 
     private suspend fun uploadExerciseImage(image: UiImage?, id: String): String {
-        val imageFileData = image!!.asByteArray()
+        if (image == null) return ""
+        val imageFileData = image.asByteArray()
         return manageExerciseUseCase.uploadExerciseImage(
             fileBytes = imageFileData.bytes,
             fileName = imageFileData.fileName,

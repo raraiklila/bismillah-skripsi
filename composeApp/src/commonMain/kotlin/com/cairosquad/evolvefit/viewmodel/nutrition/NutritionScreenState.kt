@@ -31,6 +31,9 @@ data class NutritionScreenState(
     val isAddButtonEnabled: Boolean = false,
     val isInitialLoad : Boolean = true,
 
+    val isCongratsCaloriesVisible: Boolean = false,
+    val isCongratsWaterVisible: Boolean = false,
+
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
 
     val mealNameInput: String = "",

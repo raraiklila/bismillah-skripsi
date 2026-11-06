@@ -50,7 +50,7 @@ fun DropdownMenu(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+                .clip(Theme.shapes.cardShape)
                 .background(Theme.color.surfaces.surfaceContainer)
                 .padding(8.dp)
         ) {
@@ -91,7 +91,7 @@ fun DropdownMenu(
     ) {
         AnimatedVisibility(
             modifier = modifier.dropShadow(
-                shape = RoundedCornerShape(8.dp),
+                shape = Theme.shapes.cardShape,
                 color = dropShadowColor,
                 offsetY = 40.dp,
                 offsetX = 0.dp,
@@ -104,7 +104,7 @@ fun DropdownMenu(
                 modifier = modifier
                     .offset(y = (-8).dp)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(Theme.shapes.cardShape)
                     .background(Theme.color.surfaces.surfaceContainer)
                     .padding(8.dp)
             ) {

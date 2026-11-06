@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.WorkoutCard
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.component.RefreshBox
 import com.cairosquad.evolvefit.ui.screen.communityWorkout.content.component.CommunityWorkoutAppBar
 import com.cairosquad.evolvefit.ui.screen.workout.content.WorkoutsErrorScreen
@@ -83,8 +84,8 @@ fun CommunityWorkoutsScreenContent(
                                     WorkoutCard(
                                         modifier = Modifier
                                             .padding(horizontal = 16.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .clickable { listener.onWorkoutClicked(workout.id) },
+                                            .clip(Theme.shapes.cardShape)
+                                            .bouncyClickable { listener.onWorkoutClicked(workout.id) },
                                         title = workout.title,
                                         duration = workout.durationInMinutes + " " +
                                                 stringResource(Res.string.min),

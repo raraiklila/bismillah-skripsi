@@ -49,6 +49,7 @@ import com.cairosquad.evolvefit.design_system.component.appbar.IndicatorBar
 import com.cairosquad.evolvefit.design_system.component.clockTimer.ClockTimer
 import com.cairosquad.evolvefit.design_system.component.clockTimer.rememberClockTimerState
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.ExerciseNameAndInfoIcon
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutInteractionListener
@@ -103,7 +104,7 @@ fun PlayWorkoutContentPerform(
             currentStep = screenState.currentStep,
             totalSteps = screenState.workout.exercises.size,
             onClickLeadingIcon = listener::onCancelWorkoutClicked,
-            isStepsCountVisible = false,
+            isStepsCountVisible = true,
             leadingIcon = painterResource(Res.drawable.ic_cross),
         )
 
@@ -133,7 +134,7 @@ fun PlayWorkoutContentPerform(
                         .onGloballyPositioned {
                             if (it.size.width > it.size.height) useAspectRation = true
                         }
-                        .clip(RoundedCornerShape(8.dp)),
+                        .clip(Theme.shapes.cardShape),
                     model = screenState.workout.exercises[pageIndex].imageUrls.firstOrNull() ?: "",
                     contentDescription = screenState.workout.exercises[pageIndex].name,
                     defaultImage = painterResource(Res.drawable.ic_app_logo),
@@ -144,21 +145,21 @@ fun PlayWorkoutContentPerform(
         }
         Text(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp)
+                .padding(horizontal = Theme.spacing.space200)
+                .padding(bottom = Theme.spacing.space50)
                 .align(Alignment.CenterHorizontally),
-            text = stringResource(Res.string.exercise) + " ${pagerState.currentPage + 1}/${screenState.workout.exercises.size}",
-            style = Theme.textStyle.label.smallRegular14,
-            color = Theme.color.surfaces.outline,
+            text = stringResource(Res.string.exercise).uppercase() + " ${pagerState.currentPage + 1}/${screenState.workout.exercises.size}",
+            style = Theme.textStyle.label.labelLargeEmphasized,
+            color = Theme.color.brand.primary,
         )
         ExerciseNameAndInfoIcon(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp)
+                .padding(horizontal = Theme.spacing.space200)
+                .padding(bottom = Theme.spacing.space300)
                 .align(Alignment.CenterHorizontally),
             exerciseName = screenState.workout.exercises[pagerState.currentPage].name,
             onClickInfo = { listener.onExerciseInfoClicked(screenState.workout.exercises[pagerState.currentPage].id) },
-            textStyle = Theme.textStyle.display.largeBold20
+            textStyle = Theme.textStyle.headline.headlineLargeEmphasized
         )
         BottomSection(
             modifier = Modifier
@@ -227,10 +228,13 @@ private fun BottomSectionReps(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            modifier = Modifier.padding(bottom = 60.dp),
+            modifier = Modifier.padding(bottom = Theme.spacing.space400),
             text = "X$reps",
-            style = Theme.textStyle.title.largeBold16.copy(fontSize = 48.sp),
-            color = Theme.color.surfaces.onSurfaceContainer,
+            style = Theme.textStyle.display.displayLargeEmphasized.copy(
+                fontSize = 56.sp,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Black
+            ),
+            color = Theme.color.surfaces.onSurface,
         )
         BottomButtons(
             onClickPrimaryButton = onClickDone,
@@ -305,25 +309,25 @@ private fun BottomButtons(
     ) {
         Icon(
             modifier = Modifier
-                .size(48.dp)
+                .size(52.dp)
                 .clip(CircleShape)
-                .clickable(onClick = onClickBack, enabled = isBackButtonEnabled)
+                .bouncyClickable(enabled = isBackButtonEnabled, onClick = onClickBack)
                 .background(Theme.color.surfaces.surfaceContainer)
-                .padding(12.dp)
+                .padding(14.dp)
                 .scale(scaleX = if (isRTL) -1f else 1f, scaleY = 1f),
             painter = painterResource(Res.drawable.ic_previous_arrow),
             contentDescription = stringResource(Res.string.back_button),
-            tint =
-                animateColorAsState(
-                    if (isBackButtonEnabled) Theme.color.surfaces.onSurfaceContainer
-                    else Theme.color.surfaces.outlineVariant
-                ).value,
+            tint = animateColorAsState(
+                if (isBackButtonEnabled) Theme.color.surfaces.onSurfaceContainer
+                else Theme.color.surfaces.outlineVariant,
+                animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring()
+            ).value,
         )
         Icon(
             modifier = Modifier
-                .size(64.dp)
+                .size(68.dp)
                 .clip(CircleShape)
-                .clickable(onClick = onClickPrimaryButton)
+                .bouncyClickable(onClick = onClickPrimaryButton)
                 .background(Theme.color.brand.primary)
                 .padding(20.dp),
             painter = primaryButtonIcon,
@@ -332,19 +336,19 @@ private fun BottomButtons(
         )
         Icon(
             modifier = Modifier
-                .size(48.dp)
+                .size(52.dp)
                 .clip(CircleShape)
-                .clickable(onClick = onClickForward, enabled = isForwardButtonEnabled)
+                .bouncyClickable(enabled = isForwardButtonEnabled, onClick = onClickForward)
                 .background(Theme.color.surfaces.surfaceContainer)
-                .padding(12.dp)
+                .padding(14.dp)
                 .scale(scaleX = if (isRTL) -1f else 1f, scaleY = 1f),
             painter = painterResource(Res.drawable.ic_next_arrow),
             contentDescription = stringResource(Res.string.next),
-            tint =
-                animateColorAsState(
-                    if (isForwardButtonEnabled) Theme.color.surfaces.onSurfaceContainer
-                    else Theme.color.surfaces.outlineVariant
-                ).value,
+            tint = animateColorAsState(
+                if (isForwardButtonEnabled) Theme.color.surfaces.onSurfaceContainer
+                else Theme.color.surfaces.outlineVariant,
+                animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring()
+            ).value,
         )
     }
 }

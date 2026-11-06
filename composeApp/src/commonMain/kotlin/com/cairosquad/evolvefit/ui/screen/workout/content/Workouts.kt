@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.WorkoutCard
+import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.viewmodel.workout.WorkoutScreenState
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.min
@@ -36,8 +38,8 @@ fun Workouts(
             WorkoutCard(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { onClickWorkout(workout.id) },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { onClickWorkout(workout.id) },
                 title = workout.title,
                 duration = workout.durationInMinutes + " " + stringResource(Res.string.min),
                 focusArea = stringResource(displayArea.nameResId),

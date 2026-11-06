@@ -91,7 +91,9 @@ fun Exercise.toUiState(): CreateWorkOutScreenState.ExerciseUiState {
                 CreateWorkOutScreenState.ExerciseType.Duration(specification.timeInSeconds)
         },
         equipment = equipment.toUiState(),
-        focusAreas = focusAreas.map { CreateWorkOutScreenState.FocusArea.valueOf(it.name) }
+        focusAreas = focusAreas.mapNotNull { fa ->
+            runCatching { CreateWorkOutScreenState.FocusArea.valueOf(fa.name) }.getOrNull()
+        }
     )
 }
 

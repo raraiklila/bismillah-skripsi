@@ -3,6 +3,8 @@ package com.cairosquad.evolvefit.ui.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -13,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.repository.authentication.local.AuthenticationPreferences
 import com.cairosquad.evolvefit.ui.screen.communityWorkout.CommunityWorkoutScreen
@@ -60,22 +63,36 @@ fun NavigationHost(
             .background(color = Theme.color.surfaces.surface),
         navController = navController,
         startDestination = startDestination,
-        enterTransition = { fadeIn(animationSpec = tween(durationMillis = 300)) },
-        exitTransition = {
-            fadeOut(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    delayMillis = 300
-                )
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> (fullWidth * 0.12f).toInt() },
+                animationSpec = tween(durationMillis = 350, easing = AppMotion.EmphasizedDecelerate)
+            ) + fadeIn(
+                animationSpec = tween(durationMillis = 250, easing = AppMotion.EmphasizedDecelerate)
             )
         },
-        popEnterTransition = { fadeIn(animationSpec = tween(durationMillis = 300)) },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> -(fullWidth * 0.08f).toInt() },
+                animationSpec = tween(durationMillis = 250, easing = AppMotion.EmphasizedAccelerate)
+            ) + fadeOut(
+                animationSpec = tween(durationMillis = 200, easing = AppMotion.EmphasizedAccelerate)
+            )
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> -(fullWidth * 0.12f).toInt() },
+                animationSpec = tween(durationMillis = 350, easing = AppMotion.EmphasizedDecelerate)
+            ) + fadeIn(
+                animationSpec = tween(durationMillis = 250, easing = AppMotion.EmphasizedDecelerate)
+            )
+        },
         popExitTransition = {
-            fadeOut(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    delayMillis = 300
-                )
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> (fullWidth * 0.08f).toInt() },
+                animationSpec = tween(durationMillis = 250, easing = AppMotion.EmphasizedAccelerate)
+            ) + fadeOut(
+                animationSpec = tween(durationMillis = 200, easing = AppMotion.EmphasizedAccelerate)
             )
         },
     ) {

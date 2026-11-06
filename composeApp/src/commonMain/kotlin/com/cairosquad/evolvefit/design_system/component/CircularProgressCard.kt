@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.ui.util.Formatter
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.ic_fire
@@ -67,22 +68,23 @@ fun CircularProgressCard(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(Theme.shapes.cardShape)
             .background(backgroundColor)
+            .then(if (buttonClickable) Modifier.bouncyClickable(onClick = onActionButtonClicked) else Modifier)
     ) {
         Column(
             modifier = Modifier
-                .padding(vertical = 12.dp, horizontal = 8.dp),
+                .padding(vertical = Theme.spacing.space200, horizontal = Theme.spacing.space200),
         ) {
             Row(
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(bottom = Theme.spacing.space150),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     modifier = Modifier
                         .size(20.dp)
-                        .padding(end = 4.dp),
+                        .padding(end = 6.dp),
                     painter = icon,
                     contentDescription = "Icon description",
                     tint = iconColor
@@ -97,14 +99,14 @@ fun CircularProgressCard(
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 12.dp)
+                    .padding(bottom = 14.dp)
             ) {
                 CircularProgressCard(
                     percentage = percentage,
                     number = 100,
-                    radius = 40.dp,
-                    strokeWidth = 8.dp,
-                    animationDuration = 1000,
+                    radius = 42.dp,
+                    strokeWidth = 9.dp,
+                    animationDuration = 1100,
                     progressColor = progressColor,
                 )
             }
@@ -114,7 +116,7 @@ fun CircularProgressCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.padding(vertical = 9.dp),
+                    modifier = Modifier.padding(vertical = 4.dp),
                     text = bottomStatistics,
                     color = Theme.color.surfaces.outline,
                     style = Theme.textStyle.body.mediumMedium12
@@ -123,10 +125,10 @@ fun CircularProgressCard(
                     Spacer(modifier = Modifier.weight(1f))
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(34.dp)
                             .clip(CircleShape)
                             .background(Theme.color.system.info)
-                            .clickable(onClick = { onActionButtonClicked() }, enabled = buttonClickable),
+                            .bouncyClickable(enabled = buttonClickable, onClick = onActionButtonClicked),
                         contentAlignment = Alignment.Center
 
                     ) {

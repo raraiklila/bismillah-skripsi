@@ -36,7 +36,7 @@ fun MeasurementTypeSelector(
             titleColor = durationTitleColor,
             isChecked = isDurationChecked,
             onCheckedChange = {
-                if (it) onMeasurementTypeSelected(CreateExerciseState.MeasurementType.DURATION)
+                onMeasurementTypeSelected(CreateExerciseState.MeasurementType.DURATION)
             },
             style = CheckboxStyle.Tick
         )
@@ -46,7 +46,7 @@ fun MeasurementTypeSelector(
             titleColor = repsTitleColor,
             isChecked = isRepsChecked,
             onCheckedChange = {
-                if (it) onMeasurementTypeSelected(CreateExerciseState.MeasurementType.REPS)
+                onMeasurementTypeSelected(CreateExerciseState.MeasurementType.REPS)
             },
             style = CheckboxStyle.Tick
         )

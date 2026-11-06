@@ -29,6 +29,7 @@ import com.cairosquad.evolvefit.design_system.component.CheckboxItem
 import com.cairosquad.evolvefit.design_system.component.CheckboxStyle
 import com.cairosquad.evolvefit.design_system.component.PrimaryButton
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.domain.model.Language
 import com.cairosquad.evolvefit.domain.usecase.profile.ManagePreferencesUseCase
 import com.cairosquad.evolvefit.ui.util.ObserveAsEffect
@@ -130,21 +131,13 @@ private fun BottomActionSection(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
+        PrimaryButton(
+            text = stringResource(Res.string.ready_to_start),
+            onClick = onSignUpClicked,
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .height(48.dp).background(Theme.color.brand.primary)
                 .fillMaxWidth()
-                .noRippleClickable(onClick = { onSignUpClicked() }),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(Res.string.ready_to_start),
-                style = Theme.textStyle.body.mediumMedium14,
-                color = Theme.color.brand.onPrimary
-            )
-        }
+        )
 
         Row(
             modifier = Modifier.padding(bottom = 24.dp).fillMaxWidth(),
@@ -162,7 +155,7 @@ private fun BottomActionSection(
                 style = Theme.textStyle.label.mediumMedium16,
                 color = Theme.color.brand.primary,
                 modifier = Modifier.padding(end = 4.dp)
-                    .noRippleClickable(onClick = { onLoginClicked() })
+                    .bouncyClickable(onClick = { onLoginClicked() })
             )
         }
     }

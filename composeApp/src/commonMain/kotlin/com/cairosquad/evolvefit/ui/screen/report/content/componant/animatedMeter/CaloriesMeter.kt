@@ -1,7 +1,5 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant.animatedMeter
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -24,7 +22,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
+import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.ui.util.toFormattedString
 import evolvefit.composeapp.generated.resources.Res
@@ -39,37 +40,38 @@ fun CaloriesMeter(
     isAnimationStarted: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val animateCurrentPercentage by animateFloatAsState(
-        targetValue = if (isAnimationStarted) (takenCalories.toFloat() / expectedCalories) else 0f,
-        animationSpec = tween(
-            durationMillis = 1200,
-            easing = LinearOutSlowInEasing
+    val animSpec = if (isAnimationStarted) {
+        AppMotion.SpringTokens.slowSpatial<Float>()
+    } else {
+        tween<Float>(
+            durationMillis = 180,
+            easing = AppMotion.EmphasizedAccelerate
         )
+    }
+
+    val targetFraction = (takenCalories.toFloat() / expectedCalories.coerceAtLeast(1)).coerceAtMost(1f)
+
+    val animateCurrentPercentage by animateFloatAsState(
+        targetValue = if (isAnimationStarted) targetFraction else 0f,
+        animationSpec = animSpec,
+        label = "caloriesSweep"
     )
     val rotationState by animateFloatAsState(
         targetValue = if (isAnimationStarted) 80f else 95f,
-        animationSpec = tween(
-            durationMillis = 1200,
-            easing = LinearOutSlowInEasing
-        )
+        animationSpec = animSpec,
+        label = "caloriesRotation"
     )
 
     val offsetX by animateFloatAsState(
         targetValue = if (isAnimationStarted) 0f else -0.5f,
-        animationSpec = tween(
-            durationMillis = 1200,
-            easing = LinearOutSlowInEasing
-        )
+        animationSpec = animSpec,
+        label = "caloriesOffset"
     )
-    val animatedSweepAnglePercentage =
-        if (takenCalories <= expectedCalories) animateCurrentPercentage else 1f
-    val sweepAngle = 180f * animatedSweepAnglePercentage
+    val sweepAngle = 180f * animateCurrentPercentage
     val strokeWidth = 13.dp
 
     val backgroundColor = Theme.color.surfaces.outlineVariant
-    val progressColor by animateColorAsState(
-        targetValue = if (takenCalories < expectedCalories) Theme.color.system.success else Theme.color.system.error
-    )
+    val progressColor = Theme.color.system.success
     val dashedArcColor = Theme.color.surfaces.outlineVariant
 
     Box(
@@ -83,24 +85,26 @@ fun CaloriesMeter(
             Canvas(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .width(123.dp).height((123).dp)
+                    .width(123.dp).height(123.dp)
             ) {
                 val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f), 0f)
                 val innerPadding = 12.dp.toPx()
                 drawArc(
                     color = backgroundColor,
-                    180f,
-                    180f,
+                    startAngle = 180f,
+                    sweepAngle = 180f,
                     useCenter = false,
-                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Square)
+                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
                 )
-                drawArc(
-                    color = progressColor,
-                    180f,
-                    sweepAngle,
-                    useCenter = false,
-                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Square)
-                )
+                if (sweepAngle > 0.5f) {
+                    drawArc(
+                        color = progressColor,
+                        startAngle = 180f,
+                        sweepAngle = sweepAngle,
+                        useCenter = false,
+                        style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                    )
+                }
 
                 drawArc(
                     color = dashedArcColor,
@@ -144,8 +148,8 @@ fun CaloriesMeter(
         ) {
             Text(
                 text = takenCalories.toUInt().toFormattedString(),
-                style = Theme.textStyle.headline.largeBold18,
-                color = Theme.color.surfaces.onSurfaceContainer
+                style = Theme.textStyle.display.largeBold24.copy(fontWeight = FontWeight.ExtraBold),
+                color = Theme.color.surfaces.textColor
             )
             Text(
                 text = stringResource(
@@ -159,13 +163,14 @@ fun CaloriesMeter(
     }
 }
 
-
 @Preview
 @Composable
-private fun WaterMeterPreview() {
-    CaloriesMeter(
-        expectedCalories = 2500,
-        takenCalories = 1000,
-        true
-    )
+private fun CaloriesMeterPreview() {
+    AppTheme(isDarkTheme = true) {
+        CaloriesMeter(
+            expectedCalories = 14000,
+            takenCalories = 8450,
+            isAnimationStarted = true
+        )
+    }
 }

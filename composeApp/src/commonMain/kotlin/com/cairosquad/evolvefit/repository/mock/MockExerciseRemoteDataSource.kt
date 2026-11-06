@@ -7,7 +7,7 @@ import com.cairosquad.evolvefit.repository.equipment.remote.dto.GymEquipmentDto
 
 class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
 
-    private val mockExercises = listOf(
+    private val mockExercises = mutableListOf(
         ExerciseResponseDto(
             id = "ex-1",
             name = "Push-up",
@@ -68,16 +68,36 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
     )
 
     override suspend fun createExercise(exercise: ExerciseDto): ExerciseResponseDto {
-        return ExerciseResponseDto(
-            id = "ex-new-${System.currentTimeMillis()}",
+        val equipmentList = exercise.gymEquipments.map { eqId ->
+            GymEquipmentDto(
+                id = eqId,
+                name = when (eqId) {
+                    1 -> "Barbell"
+                    2 -> "Dumbbell"
+                    3 -> "Resistance Band"
+                    4 -> "Kettlebell"
+                    5 -> "Pull-up Bar"
+                    6 -> "Bench"
+                    7 -> "Treadmill"
+                    8 -> "Jump Rope"
+                    else -> "Equipment $eqId"
+                }
+            )
+        }
+        val defaultImage = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"
+        val newExercise = ExerciseResponseDto(
+            id = "ex-new-${kotlinx.datetime.Clock.System.now().toEpochMilliseconds()}",
             name = exercise.name,
             instructions = exercise.instructions,
-            images = exercise.images,
+            images = if (exercise.images.isNotEmpty()) exercise.images else listOf(defaultImage),
+            gymEquipments = equipmentList,
             focusArea = exercise.focusArea,
             exerciseType = exercise.exerciseType,
             reps = exercise.reps,
             durationSeconds = exercise.durationSeconds
         )
+        mockExercises.add(newExercise)
+        return newExercise
     }
 
     override suspend fun uploadExerciseImage(
@@ -85,7 +105,14 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
         fileName: String,
         exerciseId: String
     ): String {
-        return "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"
+        val imageUrl = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400"
+        val index = mockExercises.indexOfFirst { it.id == exerciseId }
+        if (index != -1) {
+            val existing = mockExercises[index]
+            val updatedImages = (existing.images + imageUrl).distinct()
+            mockExercises[index] = existing.copy(images = updatedImages)
+        }
+        return imageUrl
     }
 
     override suspend fun getExercisesByQuery(query: String): List<ExerciseResponseDto> {
@@ -95,6 +122,6 @@ class MockExerciseRemoteDataSource : ExerciseRemoteDataSource {
     }
 
     override suspend fun getAllExercises(): List<ExerciseResponseDto> {
-        return mockExercises
+        return mockExercises.toList()
     }
 }

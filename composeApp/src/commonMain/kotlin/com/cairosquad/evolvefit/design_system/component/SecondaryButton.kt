@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -26,32 +27,34 @@ fun SecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
-    enabledContainerColor: Color = Color.Transparent,
-    disabledContainerColor: Color = Color.Transparent,
+    enabledContainerColor: Color = Theme.color.surfaces.surfaceContainerHighest,
+    disabledContainerColor: Color = Theme.color.surfaces.surfaceContainerHighest.copy(alpha = 0.38f),
     enabledTextColor: Color = Theme.color.surfaces.textColor,
     disabledTextColor: Color = Theme.color.surfaces.outline,
     textStyle: TextStyle = Theme.textStyle.body.mediumMedium14,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (isEnabled) enabledContainerColor else disabledContainerColor,
-        label = "ContainerColorAnimation"
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring(),
+        label = "M3SecondaryButtonContainer"
     )
 
     val textColor by animateColorAsState(
         targetValue = if (isEnabled) enabledTextColor else disabledTextColor,
-        label = "TextColorAnimation"
+        animationSpec = com.cairosquad.evolvefit.design_system.theme.AppMotion.bouncySpring(),
+        label = "M3SecondaryButtonText"
     )
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(CircleShape)
+            .clip(Theme.shapes.buttonShape)
             .background(containerColor)
-            .clickable(enabled = isEnabled, onClick = onClick),
+            .bouncyClickable(enabled = isEnabled, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp),
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
             text = text,
             color = textColor,
             style = textStyle,

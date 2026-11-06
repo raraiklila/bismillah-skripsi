@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
+import com.cairosquad.evolvefit.design_system.theme.AppMotion
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +33,8 @@ import com.cairosquad.evolvefit.ui.screen.workout.WorkoutScreen
 import com.cairosquad.evolvefit.ui.util.PlatformBackHandler
 import com.cairosquad.evolvefit.viewmodel.more.MoreScreenState
 
+import androidx.compose.animation.scaleOut
+
 @Composable
 fun NavBarScreesContainer(
     navController: NavHostController,
@@ -47,8 +51,19 @@ fun NavBarScreesContainer(
     AnimatedContent(
         targetState = NavBarRoute.fromIndex(navBarRouteIndex),
         transitionSpec = {
-            fadeIn(animationSpec = tween(220))
-                .togetherWith(fadeOut(animationSpec = tween(90, delayMillis = 220)))
+            (fadeIn(
+                animationSpec = tween(durationMillis = 250, easing = AppMotion.EmphasizedDecelerate)
+            ) + scaleIn(
+                initialScale = 0.95f,
+                animationSpec = AppMotion.SpringTokens.defaultSpatial()
+            )).togetherWith(
+                fadeOut(
+                    animationSpec = tween(durationMillis = 150, easing = AppMotion.EmphasizedAccelerate)
+                ) + scaleOut(
+                    targetScale = 0.95f,
+                    animationSpec = tween(durationMillis = 150, easing = AppMotion.EmphasizedAccelerate)
+                )
+            )
         }
     ) { navBarRoute ->
         when (navBarRoute) {

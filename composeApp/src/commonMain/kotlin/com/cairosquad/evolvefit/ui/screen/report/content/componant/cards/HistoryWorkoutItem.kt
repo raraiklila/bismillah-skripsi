@@ -1,15 +1,19 @@
 package com.cairosquad.evolvefit.ui.screen.report.content.componant.cards
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.theme.Theme
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
@@ -33,27 +37,27 @@ fun HistoryWorkoutItem(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
             NetworkImage(
                 modifier = Modifier
-                    .size(width = 68.dp, height = 52.dp)
-                    .clip(RoundedCornerShape(4.dp)),
+                    .size(width = 72.dp, height = 56.dp)
+                    .clip(Theme.shapes.large),
                 model = workoutImage,
                 contentDescription = stringResource(Res.string.workouts),
             )
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
                     text = workoutName,
-                    style = Theme.textStyle.label.mediumMedium16,
+                    style = Theme.textStyle.title.titleMediumEmphasized,
                     color = Theme.color.surfaces.onSurfaceContainer
                 )
                 Text(
@@ -64,7 +68,15 @@ fun HistoryWorkoutItem(
             }
         }
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Theme.color.surfaces.surfaceContainerHighest.copy(alpha = 0.55f),
+                    shape = Theme.shapes.cardSmallShape
+                )
+                .padding(vertical = 10.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             WorkoutDetailsItem(
                 modifier = Modifier.weight(1f),
@@ -77,9 +89,10 @@ fun HistoryWorkoutItem(
                 value = duration
             )
             WorkoutDetailsItem(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1.4f),
                 title = stringResource(Res.string.level_label),
-                value = level
+                value = level,
+                isHighlightedBadge = true
             )
         }
     }
@@ -89,6 +102,7 @@ fun HistoryWorkoutItem(
 private fun WorkoutDetailsItem(
     title: String,
     value: String,
+    isHighlightedBadge: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -101,11 +115,32 @@ private fun WorkoutDetailsItem(
             style = Theme.textStyle.label.smallRegular12,
             color = Theme.color.surfaces.onSurfaceVariant
         )
-        Text(
-            text = value,
-            style = Theme.textStyle.title.largeBold14,
-            color = Theme.color.surfaces.onSurfaceContainer
-        )
+        if (isHighlightedBadge) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = Theme.color.brand.primary.copy(alpha = 0.16f),
+                        shape = Theme.shapes.pillShape
+                    )
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = value,
+                    style = Theme.textStyle.label.labelSmallEmphasized,
+                    color = Theme.color.brand.primary,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        } else {
+            Text(
+                text = value,
+                style = Theme.textStyle.title.titleSmallEmphasized,
+                color = Theme.color.surfaces.onSurfaceContainer
+            )
+        }
     }
 }
 

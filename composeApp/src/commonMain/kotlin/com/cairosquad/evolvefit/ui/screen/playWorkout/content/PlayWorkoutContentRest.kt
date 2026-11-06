@@ -1,21 +1,21 @@
 package com.cairosquad.evolvefit.ui.screen.playWorkout.content
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,15 +23,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cairosquad.evolvefit.design_system.theme.AppTheme
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
-import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.ColumnWithBackgroundImage
-import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.ExerciseNameAndInfoIcon
 import com.cairosquad.evolvefit.ui.screen.playWorkout.content.component.RestTimer
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutInteractionListener
 import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutScreenState
@@ -39,13 +39,13 @@ import com.cairosquad.evolvefit.viewmodel.play_workout.PlayWorkoutViewModel
 import evolvefit.composeapp.generated.resources.Res
 import evolvefit.composeapp.generated.resources.exercise_info
 import evolvefit.composeapp.generated.resources.ic_app_logo
-import evolvefit.composeapp.generated.resources.ic_default_image
 import evolvefit.composeapp.generated.resources.ic_play
 import evolvefit.composeapp.generated.resources.im_default_workout
 import evolvefit.composeapp.generated.resources.next_movement
 import evolvefit.composeapp.generated.resources.take_a_rest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun PlayWorkoutContentRest(
@@ -56,74 +56,104 @@ fun PlayWorkoutContentRest(
         .getOrNull(screenState.currentStep - 1)
         ?: PlayWorkoutScreenState.ExerciseUiState()
 
-    val upperSpaceWeight = 0.546f
-    val lowerSpaceWeight = 1 - upperSpaceWeight
+    // Premium M3 Expressive Gradient Background (Crisp & High Contrast)
+    val backgroundBrush = Brush.verticalGradient(
+        colors = listOf(
+            Theme.color.surfaces.surface,
+            Theme.color.brand.primaryContainer.copy(alpha = 0.25f),
+            Theme.color.surfaces.surface
+        )
+    )
 
-    ColumnWithBackgroundImage(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        model = screenState.workout.imageUrl,
-        contentDescription = screenState.workout.name,
-        contentPadding = WindowInsets.systemBars.asPaddingValues(),
-        backgroundBlurRadius = 32.dp
+            .background(backgroundBrush)
     ) {
-        Spacer(Modifier.weight(upperSpaceWeight))
-        Text(
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = 16.dp),
-            text = stringResource(Res.string.take_a_rest),
-            style = Theme.textStyle.display.largeBold20,
-            color = Theme.color.surfaces.textColor,
-        )
-        RestTimer(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
-            timeInSeconds = PlayWorkoutViewModel.REST_TIMER_IN_SECONDS,
-            onClickSkipRest = listener::onSkipRestClicked,
-            onFinish = listener::onRestFinishClicked,
-            timeIncrement = PlayWorkoutViewModel.REST_TIMER_INCREMENT_IN_SECONDS,
-            textColor = Theme.color.surfaces.textColor,
-            textStyle = Theme.textStyle.title.largeBold16.copy(
-                fontSize = 48.sp,
-                fontWeight = FontWeight.Black
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(horizontal = Theme.spacing.space200)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Clean Text "Take a Rest" without container, positioned slightly lower
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = stringResource(Res.string.take_a_rest),
+                style = Theme.textStyle.display.largeBold20,
+                color = Theme.color.surfaces.onSurface,
             )
-        )
-        Spacer(Modifier.weight(lowerSpaceWeight))
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            text = stringResource(Res.string.next_movement) + " (${screenState.currentStep}/${screenState.workout.exercises.size})",
-            style = Theme.textStyle.label.smallRegular14,
-            color = Theme.color.surfaces.textColor,
-        )
-        ExerciseNameAndInfoIcon(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp),
-            exerciseName = currentExercise.name,
-            onClickInfo = { listener.onExerciseInfoClicked(currentExercise.id) },
-            textStyle = Theme.textStyle.headline.mediumMedium18,
-            textColor = Theme.color.surfaces.textColor
-        )
-        NetworkImageWithPlayButton(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp)
-                .aspectRatio(328f/360f)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(8.dp))
-                .clickable(onClick = { listener.onExerciseInfoClicked(currentExercise.id) }),
-            model = currentExercise.imageUrls.firstOrNull() ?: "",
-            contentDescription = currentExercise.name,
-            defaultImage = painterResource(Res.drawable.ic_app_logo),
-        )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // M3 Wavy Circular Rest Timer with countdown digits and action buttons
+            RestTimer(
+                modifier = Modifier.fillMaxWidth(),
+                timeInSeconds = PlayWorkoutViewModel.REST_TIMER_IN_SECONDS,
+                onClickSkipRest = listener::onSkipRestClicked,
+                onFinish = listener::onRestFinishClicked,
+                timeIncrement = PlayWorkoutViewModel.REST_TIMER_INCREMENT_IN_SECONDS,
+                textColor = Theme.color.surfaces.onSurface,
+                textStyle = Theme.textStyle.display.largeBold20.copy(
+                    fontSize = 44.sp,
+                    fontWeight = FontWeight.Black
+                )
+            )
+
+            // Ergonomic spacing between buttons and the Next Movement card (no giant void)
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Next Movement Container Card (M3 Expressive Card)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(Theme.shapes.cardShape)
+                    .background(Theme.color.surfaces.surfaceContainer)
+                    .padding(Theme.spacing.space200)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.next_movement),
+                        style = Theme.textStyle.label.mediumMedium12,
+                        color = Theme.color.brand.primary
+                    )
+                    Text(
+                        text = "${screenState.currentStep}/${screenState.workout.exercises.size}",
+                        style = Theme.textStyle.label.smallRegular12,
+                        color = Theme.color.surfaces.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(Theme.spacing.space50))
+
+                Text(
+                    text = currentExercise.name,
+                    style = Theme.textStyle.headline.mediumMedium18,
+                    color = Theme.color.surfaces.onSurface,
+                    modifier = Modifier.padding(bottom = Theme.spacing.space150)
+                )
+
+                NetworkImageWithPlayButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(4f / 3f)
+                        .clip(Theme.shapes.medium)
+                        .bouncyClickable(onClick = { listener.onExerciseInfoClicked(currentExercise.id) }),
+                    model = currentExercise.imageUrls.firstOrNull() ?: "",
+                    contentDescription = currentExercise.name,
+                    defaultImage = painterResource(Res.drawable.ic_app_logo),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 
@@ -137,7 +167,7 @@ private fun NetworkImageWithPlayButton(
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
-    ){
+    ) {
         NetworkImage(
             modifier = Modifier.matchParentSize(),
             model = model,
@@ -145,15 +175,46 @@ private fun NetworkImageWithPlayButton(
             defaultImage = defaultImage,
             loadingPlaceHolder = painterResource(Res.drawable.ic_app_logo)
         )
-        Icon(
+        Box(
             modifier = Modifier
-                .align(Alignment.Center)
-                .size(40.dp)
-                .background(Theme.color.surfaces.onSurfaceAt2, CircleShape)
-                .padding(13.dp),
-            painter = painterResource(Res.drawable.ic_play),
-            contentDescription = stringResource(Res.string.exercise_info),
-            tint = Theme.color.brand.primary
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(Theme.color.brand.primary)
+                .padding(12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_play),
+                contentDescription = stringResource(Res.string.exercise_info),
+                tint = Theme.color.brand.onPrimary,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PlayWorkoutContentRestPreview() {
+    AppTheme(isDarkTheme = true) {
+        PlayWorkoutContentRest(
+            screenState = PlayWorkoutScreenState(),
+            listener = object : PlayWorkoutInteractionListener {
+                override fun onCancelWorkoutClicked() {}
+                override fun onGetReadyCounterFinish() {}
+                override fun onStartClicked() {}
+                override fun onExerciseInfoClicked(id: String) {}
+                override fun onRestFinishClicked() {}
+                override fun onFinishExercise() {}
+                override fun onForwardClicked() {}
+                override fun onBackClicked() {}
+                override fun onSkipRestClicked() {}
+                override fun onNextToAnotherWorkoutClicked() {}
+                override fun onFinishClicked() {}
+                override fun onStayInWorkoutClinked() {}
+                override fun onEndClinked() {}
+                override fun onDismissExerciseInfo() {}
+            }
         )
     }
 }

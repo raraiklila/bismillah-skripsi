@@ -1,7 +1,9 @@
 package com.cairosquad.evolvefit.ui.screen.more.content
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import evolvefit.composeapp.generated.resources.im_default_profile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.evolvefit.design_system.component.BottomSheet
 import com.cairosquad.evolvefit.design_system.theme.Theme
+import com.cairosquad.evolvefit.design_system.theme.bouncyClickable
 import com.cairosquad.evolvefit.design_system.util.NetworkImage
 import com.cairosquad.evolvefit.domain.model.Language
 import com.cairosquad.evolvefit.domain.model.MeasurementStandard
@@ -109,22 +112,22 @@ fun MoreScreenContent(
             )
             AccountRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { listener.onPersonInformationClicked() },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { listener.onPersonInformationClicked() },
                 icon = Res.drawable.ic_profile,
                 title = stringResource(Res.string.personal_information)
             )
             AccountRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { listener.onFavoritesClicked() },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { listener.onFavoritesClicked() },
                 icon = Res.drawable.ic_bookmark_big,
                 title = stringResource(Res.string.favorites)
             )
             AccountRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { listener.onThemeClicked() },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { listener.onThemeClicked() },
                 icon = Res.drawable.art,
                 title = stringResource(Res.string.theme),
                 text = if (state.currentTheme == MoreScreenState.Theme.DARK) stringResource(Res.string.dark_mode) else stringResource(
@@ -133,8 +136,8 @@ fun MoreScreenContent(
             )
             AccountRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { listener.onLanguageClicked() },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { listener.onLanguageClicked() },
                 icon = Res.drawable.earth,
                 text = if (state.currentLanguage == Language.ENGLISH) stringResource(Res.string.english) else stringResource(
                     Res.string.arabic
@@ -143,8 +146,8 @@ fun MoreScreenContent(
             )
             AccountRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { listener.onLogoutClicked() },
+                    .clip(Theme.shapes.cardShape)
+                    .bouncyClickable { listener.onLogoutClicked() },
                 icon = Res.drawable.logout,
                 title = stringResource(Res.string.logout)
             )
@@ -178,6 +181,7 @@ fun MoreScreenContent(
         ) {
             LogoutBottomSheetContent(
                 onLogout = listener::onLogout,
+                onCancel = listener::onDismissLogoutBottomSheet,
             )
         }
     }
@@ -208,7 +212,7 @@ fun PersonInfo(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(Theme.shapes.cardShape)
             .background(color = Theme.color.surfaces.surfaceContainer)
             .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -294,21 +298,33 @@ fun ProfileInfo(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NetworkImage(
-            model = userImage,
-            contentDescription = stringResource(Res.string.profile_image),
-            modifier = Modifier
-                .size(80.dp)
-                .clip(shape = CircleShape)
-        )
+        if (userImage.isNotBlank()) {
+            NetworkImage(
+                model = userImage,
+                contentDescription = stringResource(Res.string.profile_image),
+                defaultImage = painterResource(Res.drawable.im_default_profile),
+                loadingPlaceHolder = painterResource(Res.drawable.im_default_profile),
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(shape = CircleShape)
+            )
+        } else {
+            Image(
+                painter = painterResource(Res.drawable.im_default_profile),
+                contentDescription = stringResource(Res.string.profile_image),
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(shape = CircleShape)
+            )
+        }
         Text(
             modifier = Modifier.padding(bottom = 4.dp, top = 12.dp),
-            text = userName,
+            text = userName.ifBlank { "EvolveFit User" },
             color = Theme.color.surfaces.onSurfaceContainer,
             style = Theme.textStyle.label.mediumMedium14
         )
         Text(
-            text = userEmail,
+            text = userEmail.ifBlank { "user@evolvefit.app" },
             color = Theme.color.surfaces.onSurfaceVariant,
             style = Theme.textStyle.label.smallRegular12
         )
@@ -329,7 +345,7 @@ fun AccountRow(
         modifier = modifier
             .background(
                 color = Theme.color.surfaces.surfaceContainer,
-                shape = RoundedCornerShape(8.dp)
+                shape = Theme.shapes.cardShape
             )
             .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

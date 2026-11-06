@@ -210,10 +210,10 @@ private fun DetailsCardsRowLoading(brush: Brush) {
                 .border(
                     1.dp,
                     Theme.color.surfaces.outlineVariant,
-                    RoundedCornerShape(8.dp)
+                    Theme.shapes.cardShape
                 ),
             shimmerBrush = brush,
-            shape = RoundedCornerShape(8.dp),
+            shape = Theme.shapes.cardShape,
             background = Theme.color.surfaces.surfaceContainer
         )
         ShimmerOverlayShape(
@@ -223,10 +223,10 @@ private fun DetailsCardsRowLoading(brush: Brush) {
                 .border(
                     1.dp,
                     Theme.color.surfaces.outlineVariant,
-                    RoundedCornerShape(8.dp)
+                    Theme.shapes.cardShape
                 ),
             shimmerBrush = brush,
-            shape = RoundedCornerShape(8.dp),
+            shape = Theme.shapes.cardShape,
             background = Theme.color.surfaces.surfaceContainer
         )
         ShimmerOverlayShape(
@@ -236,10 +236,10 @@ private fun DetailsCardsRowLoading(brush: Brush) {
                 .border(
                     1.dp,
                     Theme.color.surfaces.outlineVariant,
-                    RoundedCornerShape(8.dp)
+                    Theme.shapes.cardShape
                 ),
             shimmerBrush = brush,
-            shape = RoundedCornerShape(8.dp),
+            shape = Theme.shapes.cardShape,
             background = Theme.color.surfaces.surfaceContainer
         )
     }

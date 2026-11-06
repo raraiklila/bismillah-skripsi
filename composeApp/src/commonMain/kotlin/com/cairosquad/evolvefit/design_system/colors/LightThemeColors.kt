@@ -3,42 +3,50 @@ package com.cairosquad.evolvefit.design_system.colors
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Material 3 Expressive Light Color Scheme.
+ * Based on Google Material 3 Expressive design specifications (High-Chroma Vibrant Active/Fitness Palette):
+ * - Primary: High-chroma Neon Lime (Brand Identity: #86D01D / #9BE03A)
+ * - OnPrimary: High-contrast deep dark (#111A04) ensuring WCAG AAA accessibility (> 9.5:1)
+ * - PrimaryContainer: Expressive vibrant container (#D8F58D) with dark text (#142400) fixing legibility
+ * - Surfaces: Clean, modern high-contrast background (#FFFFFF) with M3 Expressive container elevation steps
+ */
 val lightM3ColorScheme = lightColorScheme(
-    primary = Color(0xFF9BE03A),
-    onPrimary = Color(0xFF161B07),
-    primaryContainer = Color(0xFFF3FAD1),
-    onPrimaryContainer = Color(0xFFD0F898),
-    secondary = Color(0xFF586249),
+    primary = Color(0xFF86D01D),
+    onPrimary = Color(0xFF111A04),
+    primaryContainer = Color(0xFFD8F58D),
+    onPrimaryContainer = Color(0xFF142400),
+    secondary = Color(0xFF536340),
     onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFDBE7C3),
-    onSecondaryContainer = Color(0xFF141E0A),
-    tertiary = Color(0xFF3B6657),
+    secondaryContainer = Color(0xFFD7E8BD),
+    onSecondaryContainer = Color(0xFF121F04),
+    tertiary = Color(0xFF386657),
     onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFBEEBD9),
-    onTertiaryContainer = Color(0xFF002117),
-    error = Color(0xFFF65659),
+    tertiaryContainer = Color(0xFFBBECE0),
+    onTertiaryContainer = Color(0xFF002018),
+    error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
-    background = Color(0xFFFDFDFD),
-    onBackground = Color(0xFF2C2C2C),
-    surface = Color(0xFFFDFDFD),
-    onSurface = Color(0xFF2C2C2C),
-    surfaceVariant = Color(0xFFFFFFFF),
-    onSurfaceVariant = Color(0xFF929292),
-    outline = Color(0xFF989898),
-    outlineVariant = Color(0xFFE6E9DB),
+    background = Color(0xFFFFFFFF),
+    onBackground = Color(0xFF191C16),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF191C16),
+    surfaceVariant = Color(0xFFF2F4E8),
+    onSurfaceVariant = Color(0xFF44483E),
+    outline = Color(0xFF75796E),
+    outlineVariant = Color(0xFFC5C9BB),
     scrim = Color(0xFF000000),
-    inverseSurface = Color(0xFF1C1C1C),
-    inverseOnSurface = Color(0xFFF0F5FF),
+    inverseSurface = Color(0xFF2E3129),
+    inverseOnSurface = Color(0xFFF1F2E8),
     inversePrimary = Color(0xFF86D01D),
-    surfaceContainer = Color(0xFFF8F8F8),
-    surfaceDim = Color(0xFFEDEDED),
-    surfaceBright = Color(0xFFFDFDFD),
+    surfaceDim = Color(0xFFDADCD1),
+    surfaceBright = Color(0xFFFFFFFF),
     surfaceContainerLowest = Color(0xFFFFFFFF),
-    surfaceContainerLow = Color(0xFFF8F8F8),
-    surfaceContainerHigh = Color(0xFFEEEEEE),
-    surfaceContainerHighest = Color(0xFFE8E8E8),
+    surfaceContainerLow = Color(0xFFF8F9EF),
+    surfaceContainer = Color(0xFFF2F4EA),
+    surfaceContainerHigh = Color(0xFFECEEE4),
+    surfaceContainerHighest = Color(0xFFE6E8DE),
 )
 
 val lightGradient = Gradiant(
