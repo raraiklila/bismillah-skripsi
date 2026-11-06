@@ -25,3 +25,7 @@ captures
 [Dd]esktop.ini
 Thumbs.db
 ehthumbs.db
+
+# Ignore local dependencies and local temp files
+node_modules/
+-server 8.8.8.8
